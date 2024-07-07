@@ -1,0 +1,13 @@
+.article_container{
+    max-width: 960px;
+    margin-left: auto;
+    margin-right: auto;
+    background-color: white;
+    -webkit-box-shadow: 0 1px 3px rgba(26, 26, 26, .1);
+    box-shadow: 0 1px 3px rgba(26, 26, 26, .1);
+    min-height: 100vh;
+}
+body{
+    background-color:#f4f5f5;
+    min-height: 100vh;
+}

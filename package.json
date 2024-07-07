@@ -9,8 +9,10 @@
   },
   "private": true,
   "dependencies": {
+    "date-fns": "^3.6.0",
     "fs": "^0.0.1-security",
     "fs-extra": "^11.2.0",
+    "gray-matter": "^4.0.3",
     "jsdom": "^24.1.0",
     "marked": "^13.0.2"
   }
