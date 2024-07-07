@@ -1,0 +1,17 @@
+{
+  "name": "codeman",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "node build/build.js"
+  },
+  "private": true,
+  "dependencies": {
+    "fs": "^0.0.1-security",
+    "fs-extra": "^11.2.0",
+    "jsdom": "^24.1.0",
+    "marked": "^13.0.2"
+  }
+}
