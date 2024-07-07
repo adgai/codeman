@@ -64,3 +64,43 @@ li {
     display: flex;
     flex-direction: column;
 }
+
+
+
+/* 链接样式 */
+a {
+    color: #000000; /* 链接颜色 */
+    text-decoration: none; /* 去除下划线 */
+    transition: color 0.3s ease; /* 平滑过渡效果 */
+}
+
+a:hover {
+    color: #0a72d6; /* 悬停时的颜色 */
+    text-decoration: underline; /* 悬停时添加下划线 */
+}
+
+a:active {
+    color: #000000; /* 激活时的颜色 */
+}
+
+a:visited {
+    color: #000000; /* 访问过后的颜色 */
+}
+
+/* 用于按钮的链接 */
+a.button {
+    display: inline-block;
+    padding: 10px 20px;
+    background-color: #3498db;
+    color: #fff;
+    border-radius: 5px;
+    transition: background-color 0.3s ease;
+}
+
+a.button:hover {
+    background-color: #2980b9;
+}
+
+a.button:active {
+    background-color: #1e6f9f;
+}

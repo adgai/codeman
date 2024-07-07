@@ -4,6 +4,7 @@ const { marked } = require('marked');
 const { JSDOM } = require('jsdom');
 const matter = require('gray-matter');
 const {addDays, format}  =  require ("date-fns");
+const chokidar = require('chokidar');
 
 
 // 确保目录存在
@@ -35,11 +36,13 @@ function convertMarkdownToHtml(directory, outputDirectory,dt) {
         <head>
           <meta charset="UTF-8">
           <title>${path.basename(file, '.md')}</title>
-            <link rel="stylesheet" type="text/css" href="./article.css">
+            <link rel="stylesheet" type="text/css" href="./static/article.css">
         </head>
         <body>
         <div class="article_container">
+        <div class="article_content">
              ${html}
+        </div>
         </div>
      
         </body>
@@ -85,6 +88,24 @@ function generateNewIndexHtml(directory, originalIndexFilePath, outputIndexFileP
     fs.writeFileSync(outputIndexFilePath, dom.serialize(), 'utf-8');
 }
 
+// 复制assets文件夹
+function copyAssetsDirectory(sourceDirectory, targetDirectory,f) {
+    const sourceAssetsPath = path.join(sourceDirectory, f);
+    const targetAssetsPath = path.join(targetDirectory, f);
+    if (fs.existsSync(sourceAssetsPath)) {
+        fs.copySync(sourceAssetsPath, targetAssetsPath);
+        console.log(`Copied assets from ${sourceAssetsPath} to ${targetAssetsPath}`);
+    } else {
+        console.log('No assets directory found to copy.');
+    }
+}
+
+// 清空输出目录
+function clearOutputDirectory(directory) {
+    fs.emptyDirSync(directory);
+    console.log(`Cleared directory: ${directory}`);
+}
+
 // 主构建过程
 function build() {
     const postsDirectory = path.join(__dirname, '../posts');
@@ -93,6 +114,11 @@ function build() {
     const outputIndexFilePath = path.join(diskDirectory, 'index.html');
 
     var dt = new Map();
+
+
+    // 清空输出目录
+    clearOutputDirectory(diskDirectory);
+
     // 确保输出目录存在
     ensureDirectoryExistence(diskDirectory);
 
@@ -102,8 +128,27 @@ function build() {
     // 在内存中生成新的index.html并写入到disk目录
     generateNewIndexHtml(diskDirectory, originalIndexFilePath, outputIndexFilePath,dt);
 
+    // 复制assets文件夹
+    copyAssetsDirectory(postsDirectory, diskDirectory,'assets');
+    copyAssetsDirectory(postsDirectory, diskDirectory,'static');
+
     console.log('Markdown files converted and new index.html generated in disk directory.');
 }
 
-// 运行构建过程
+// 监视assets文件夹并在变更时重新构建
+function watch() {
+    const assetsDirectory = path.join(__dirname, '../posts/assets');
+
+    chokidar.watch(assetsDirectory, { ignoreInitial: true })
+        .on('all', (event, path) => {
+        console.log(`Detected ${event} on ${path}. Rebuilding...`);
+        build();
+    });
+
+
+    console.log(`Watching for changes in ${assetsDirectory}`);
+}
+
+// 运行构建过程并开始监视
 build();
+// watch();

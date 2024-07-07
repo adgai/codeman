@@ -9,6 +9,7 @@
   },
   "private": true,
   "dependencies": {
+    "chokidar": "^3.6.0",
     "date-fns": "^3.6.0",
     "fs": "^0.0.1-security",
     "fs-extra": "^11.2.0",

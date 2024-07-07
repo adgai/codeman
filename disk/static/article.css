@@ -1,0 +1,39 @@
+.article_container{
+    max-width: 960px;
+    margin-left: auto;
+    margin-right: auto;
+    background-color: white;
+    -webkit-box-shadow: 0 1px 3px rgba(26, 26, 26, .1);
+    box-shadow: 0 1px 3px rgba(26, 26, 26, .1);
+    min-height: 100vh;
+
+}
+body{
+    background-color:#f4f5f5;
+    min-height: 100vh;
+    padding-top: 100px;
+    margin: 0;
+}
+
+table {
+    width: 100%;
+    text-align: center;
+    border-spacing: 0;/**设置相邻单元格的边框间的距离**/
+    border-collapse: collapse;/**边框会合并为一个单一的边框**/
+    color:#5a5a5a;
+    table-layout: fixed;/**固定table表格**/
+}
+table  thead {
+    background-color: #d9edf7;
+}
+table td,table th{
+    border:1px solid #ccc;
+    overflow: hidden;/**溢出隐藏**/
+    white-space: nowrap;/**不换行**/
+    text-overflow: ellipsis;/**溢出不可见部分使用...代替**/
+
+
+}
+.article_content{
+    padding: 30px;
+}
