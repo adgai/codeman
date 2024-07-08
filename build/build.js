@@ -37,14 +37,42 @@ function convertMarkdownToHtml(directory, outputDirectory,dt) {
           <meta charset="UTF-8">
           <title>${path.basename(file, '.md')}</title>
             <link rel="stylesheet" type="text/css" href="./static/article.css">
+            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/github-markdown-css/4.0.0/github-markdown.min.css">
+            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.7.2/styles/default.min.css">
+            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/github-markdown-css/4.0.0/github-markdown.min.css">
+  
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.7.2/highlight.min.js"></script>
+<!--<script>hljs.highlightAll();</script>-->
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tocbot/4.27.4/tocbot.css">
+
+
+
         </head>
         <body>
         <div class="article_container">
-        <div class="article_content">
+        <div class="js-toc toc"></div>
+        <div class="article_content markdown-body markdown">
              ${html}
         </div>
         </div>
-     
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tocbot/4.27.4/tocbot.min.js">
+    
+
+    </script> 
+    
+<!--    <script >-->
+<!--        tocbot.init({-->
+<!--  // Where to render the table of contents.-->
+<!--  tocSelector: '.toc',-->
+<!--  // Where to grab the headings to build the table of contents.-->
+<!--  contentSelector: '.article_content',-->
+<!--  // Which headings to grab inside of the contentSelector element.-->
+<!--  headingSelector: 'h1, h2, h3',-->
+<!--  // For headings inside relative or absolute positioned containers within content.-->
+<!--  hasInnerContainers: true,-->
+<!--});-->
+<!--    </script>-->
         </body>
         </html>
       `;
