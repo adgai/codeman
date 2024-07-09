@@ -155,4 +155,4 @@ function watch() {
 
 // 运行构建过程并开始监视
 build();
-watch();
+// watch();
