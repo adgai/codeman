@@ -1,47 +1,119 @@
-
-        <!DOCTYPE html>
-        <html lang="en">
-        <head>
-          <meta charset="UTF-8">
-          <title>thoughts</title>
-            <link rel="stylesheet" type="text/css" href="./static/article.css">
-            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/github-markdown-css/4.0.0/github-markdown.min.css">
-            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.7.2/styles/default.min.css">
-            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/github-markdown-css/4.0.0/github-markdown.min.css">
-  
-<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.7.2/highlight.min.js"></script>
-<!--<script>hljs.highlightAll();</script>-->
-
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tocbot/4.27.4/tocbot.css">
-
-
-
-        </head>
-        <body>
-        <div class="article_container">
-        <div class="js-toc toc"></div>
-        <div class="article_content markdown-body markdown">
-             <h1>年少常有所感</h1>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>文章标题</title>
+    <link rel="stylesheet" type="text/css" href="./static/article.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/github-markdown-css/4.0.0/github-markdown.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.7.2/styles/default.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tocbot/4.27.4/tocbot.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.7.2/highlight.min.js"></script>
+</head>
+<body>
+<div class="article">
+    <div class="articlet">
+        <div class="at_left">
 
         </div>
-        </div>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/tocbot/4.27.4/tocbot.min.js">
-    
+        <div class="at_center">
+            <div class="article_title">
+                <h1>
+                         <span>
+                年少常有所感
+                </span>
+                </h1>
 
-    </script> 
-    
-<!--    <script >-->
-<!--        tocbot.init({-->
-<!--  // Where to render the table of contents.-->
-<!--  tocSelector: '.toc',-->
-<!--  // Where to grab the headings to build the table of contents.-->
-<!--  contentSelector: '.article_content',-->
-<!--  // Which headings to grab inside of the contentSelector element.-->
-<!--  headingSelector: 'h1, h2, h3',-->
-<!--  // For headings inside relative or absolute positioned containers within content.-->
-<!--  hasInnerContainers: true,-->
-<!--});-->
-<!--    </script>-->
-        </body>
-        </html>
-      
+
+            </div>
+            <div class="article_info">
+                <div class="article_info_author">
+                    codeman
+                </div>
+                <div class="article_info_time">
+                    2024年07月08日 06:35
+                </div>
+
+                <div class="article_info_location">
+                    上海
+                </div>
+
+            </div>
+        </div>
+
+        <div class="at_right">
+
+        </div>
+
+    </div>
+
+    <div class="articlec">
+        <div class="article_left_content"></div>
+
+        <div class="container">
+            <div class="article_content markdown-body markdown" id="markdown">
+                <h1 id="my-prefix-年少常有所感">年少常有所感</h1>
+
+            </div>
+            <div class="article_foot"></div>
+        </div>
+        <div class="toc-container">
+            <div class="toc" id="toc">
+                <!-- TOC -->
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/tocbot/4.27.4/tocbot.min.js"></script>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const selectors = 'h1, h2, h3, h4, h5, h6';
+        const content = document.getElementById('markdown');
+        const tocContent = document.getElementById('toc');
+        const headings = content.querySelectorAll(selectors);
+
+        // 生成 TOC
+        const toc = document.createElement('div');
+        headings.forEach(heading => {
+            // 生成标题ID
+            if (!heading.id) {
+                heading.id = 'toc-' + heading.textContent.toLowerCase().replace(/\\s+/g, '-');
+            }
+
+            // 计算标题级别
+            const level = parseInt(heading.tagName[1]);
+
+            // 创建 TOC 项目
+            const link = document.createElement('a');
+            link.href = '#' + heading.id;
+            link.textContent = heading.textContent;
+            link.classList.add(`toc-level-${level}`);
+
+            // 根据级别添加不同的 padding
+            link.style.paddingLeft = `${(level - 1) * 20}px`;
+
+            const item = document.createElement('div');
+            item.className = 'toc-item'
+            item.appendChild(link);
+
+
+
+            toc.appendChild(item);
+        });
+
+        tocContent.appendChild(toc);
+
+        // TOC link active state handling
+        const tocLinks = tocContent.querySelectorAll('a');
+        tocLinks.forEach(link => {
+            link.addEventListener('click', function () {
+                tocLinks.forEach(l => l.classList.remove('active'));
+                this.classList.add('active');
+            });
+        });
+    });
+</script>
+</body>
+</html>

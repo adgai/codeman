@@ -5,7 +5,9 @@ const { JSDOM } = require('jsdom');
 const matter = require('gray-matter');
 const {addDays, format}  =  require ("date-fns");
 const chokidar = require('chokidar');
+const { gfmHeadingId } =  require ("marked-gfm-heading-id");
 
+const {generateI } = require('../posts/static/toc.js');
 
 // 确保目录存在
 function ensureDirectoryExistence(directory) {
@@ -18,6 +20,10 @@ function ensureDirectoryExistence(directory) {
 function convertMarkdownToHtml(directory, outputDirectory,dt) {
     const files = fs.readdirSync(directory);
 
+    const options = {
+        headerIds: true, // 启用 headerIds 选项
+    };
+
 
     files.forEach(file => {
         if (path.extname(file) === '.md') {
@@ -28,57 +34,27 @@ function convertMarkdownToHtml(directory, outputDirectory,dt) {
             console.log(basename)
             dt.set(basename,data)
             console.log(JSON.stringify(dt))
-            const html = marked(content);
+            const options = {
+                prefix: "my-prefix-",
+            };
 
-            const fullHtml = `
-        <!DOCTYPE html>
-        <html lang="en">
-        <head>
-          <meta charset="UTF-8">
-          <title>${path.basename(file, '.md')}</title>
-            <link rel="stylesheet" type="text/css" href="./static/article.css">
-            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/github-markdown-css/4.0.0/github-markdown.min.css">
-            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.7.2/styles/default.min.css">
-            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/github-markdown-css/4.0.0/github-markdown.min.css">
-  
-<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.7.2/highlight.min.js"></script>
-<!--<script>hljs.highlightAll();</script>-->
-
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tocbot/4.27.4/tocbot.css">
-
-
-
-        </head>
-        <body>
-        <div class="article_container">
-        <div class="js-toc toc"></div>
-        <div class="article_content markdown-body markdown">
-             ${html}
-        </div>
-        </div>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/tocbot/4.27.4/tocbot.min.js">
-    
-
-    </script> 
-    
-<!--    <script >-->
-<!--        tocbot.init({-->
-<!--  // Where to render the table of contents.-->
-<!--  tocSelector: '.toc',-->
-<!--  // Where to grab the headings to build the table of contents.-->
-<!--  contentSelector: '.article_content',-->
-<!--  // Which headings to grab inside of the contentSelector element.-->
-<!--  headingSelector: 'h1, h2, h3',-->
-<!--  // For headings inside relative or absolute positioned containers within content.-->
-<!--  hasInnerContainers: true,-->
-<!--});-->
-<!--    </script>-->
-        </body>
-        </html>
-      `;
-
+            marked.use(gfmHeadingId(options));
+            const html = marked(content,options);
+            // 读取 static/article.html
+            const templatePath = path.join(__dirname, '../posts/static/article.html');
+            let templateHtml = fs.readFileSync(templatePath, 'utf8');
+            // generateI(html)
             const htmlFileName = basename + '.html';
-            fs.writeFileSync(path.join(outputDirectory, htmlFileName), fullHtml, 'utf-8');
+
+            const outputHtml = templateHtml.replace('<!-- CONTENT -->', html)
+                .replace('<!-- AUTHOR -->', data.author)
+                .replace('<!-- TITLE -->', data.title)
+                .replace('<!-- TIME -->', format(data.date, 'yyyy年MM月dd日 HH:mm'))
+                .replace('<!-- LOCATION -->', data.location)
+
+            ;
+
+            fs.writeFileSync(path.join(outputDirectory, htmlFileName), outputHtml, 'utf-8');
         }
     });
     console.log(dt)
@@ -165,7 +141,7 @@ function build() {
 
 // 监视assets文件夹并在变更时重新构建
 function watch() {
-    const assetsDirectory = path.join(__dirname, '../posts/assets');
+    const assetsDirectory = path.join(__dirname, '../posts/static');
 
     chokidar.watch(assetsDirectory, { ignoreInitial: true })
         .on('all', (event, path) => {
@@ -179,4 +155,4 @@ function watch() {
 
 // 运行构建过程并开始监视
 build();
-// watch();
+watch();

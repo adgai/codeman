@@ -1,7 +1,9 @@
 ---
-date: 2024-07-07
+date: 2024-07-07 22:35:00
+title: 如何在cloudflare自定义静态网页生成?
+author: codeman
+location: 上海
 ---
-# 如何在cloudflare自定义静态网页生成？
 
 ## cloudflare 支持哪些静态网页生成？
 ![常见静态网页生成](./assets/如何在cloudflare自定义静态页面生成-1720341092898.png)

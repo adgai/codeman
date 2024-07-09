@@ -11,7 +11,7 @@
 body{
     background-color:#f4f5f5;
     min-height: 100vh;
-    padding-top: 100px;
+    padding-top: 20px;
     margin: 0;
 }
 
@@ -40,4 +40,132 @@ table td,table th{
 img{
     max-width: 100%;
 }
-.toc { width: 200px; height: auto; z-index: 98; background-color: rgba(255,255,255,0); transform: translateX(0); right: 25%; position: fixed !important; top:480px; position: absolute; padding-top: 10px; padding-bottom: 10px; }
+.container {
+    max-width: 960px;
+    width: 50%;
+    margin-left: auto;
+    margin-right: auto;
+    background-color: white;
+    -webkit-box-shadow: 0 1px 3px rgba(26, 26, 26, .1);
+    box-shadow: 0 1px 3px rgba(26, 26, 26, .1);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+
+}
+.markdown-body {
+    flex: 1;
+    padding: 20px;
+}
+.toc-container {
+    position: sticky;
+    top: 300px;
+    /*position: fixed; !* 或使用 position: fixed *!*/
+    /*top: 100px; !* 固定在距离顶部20px的位置 *!*/
+    /*right: 100px;*/
+    width: 25%;
+    max-height: 600px; /* 保持 TOC 在可视区域内 */
+    overflow-y: auto; /* 如果 TOC 超出高度，则滚动 */
+    margin-left: 20px; /* 与内容的间距 */
+    /*padding: 100px;*/
+
+}
+.toc{
+    max-width: 300px;    background-color: #ffffff;
+    margin-left: 100px;
+    border-radius: 8px;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+}
+.article{
+    display: flex;flex-direction: column;
+}
+.articlet{
+    /*margin-left: 25%;*/
+    display: flex;
+    /*flex-direction: column;*/
+    /*width: 50%;*/
+}
+.at_left{
+    width: 25%;
+}
+.at_center{
+    width: 50%;
+    max-width: 960px;
+    /* margin: auto; */
+    margin-left: auto;
+    margin-right: auto;
+}
+.at_right{
+    width: 25%;
+}
+.article_title h1{
+    margin: 0;
+    padding-bottom: 20px;
+}
+.article_info{
+    display: flex;
+    flex-direction: row;
+    padding-bottom: 20px;
+}
+.article_info div{
+    padding-right: 20px;
+}
+.articlec{
+    display: flex;
+}
+
+.article_left_content{
+    width: 25%;
+}
+.article_foot{
+    min-height: 100vh;
+}
+.toc ul {
+     list-style: none;
+     padding: 0;
+ }
+
+.toc li {
+    padding-left: auto; /* 缩进 */
+    display: block; /* 设置为块级元素 */
+    width: 100%; /* 确保 li 宽度和 toc 宽度一致 */
+    box-sizing: border-box; /* padding 不增加元素实际宽度 */
+}
+
+.toc a {
+    text-decoration: none;
+    color: #000; /* 文字颜色始终为黑色 */
+    display: block;
+    margin: 5px 0;
+    padding: 5px 20px; /* 填充整个宽度 */
+    border-radius: 5px;
+    transition: background-color 0.3s;
+}
+
+.toc a:hover {
+    background-color: #f0f0f0; /* 鼠标悬停时背景颜色 */
+}
+
+.toc a.active {
+    background-color: #d2ecaa; /* 点击后背景颜色 */
+}
+.toc {
+    max-width: 400px; /* 设置 TOC 的宽度 */
+    border: 1px solid #ccc; /* 可选：添加边框样式 */
+    padding: 10px; /* 可选：添加整体内边距 */
+}
+
+.toc-item {
+    text-align: left; /* 文本左对齐 */
+    white-space: nowrap; /* 不换行 */
+    overflow: hidden; /* 溢出隐藏 */
+    text-overflow: ellipsis; /* 溢出部分显示省略号 */
+    margin-bottom: 5px; /* 可选：调整项目间距 */
+
+    display: block;
+
+    background-clip: padding-box; /* 设置背景仅在 padding 区域内绘制 */
+}
+h2{
+    align-items: center;
+}

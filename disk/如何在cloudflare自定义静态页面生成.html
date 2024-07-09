@@ -1,34 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>文章标题</title>
+    <link rel="stylesheet" type="text/css" href="./static/article.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/github-markdown-css/4.0.0/github-markdown.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.7.2/styles/default.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tocbot/4.27.4/tocbot.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.7.2/highlight.min.js"></script>
+</head>
+<body>
+<div class="article">
+    <div class="articlet">
+        <div class="at_left">
 
-        <!DOCTYPE html>
-        <html lang="en">
-        <head>
-          <meta charset="UTF-8">
-          <title>如何在cloudflare自定义静态页面生成</title>
-            <link rel="stylesheet" type="text/css" href="./static/article.css">
-            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/github-markdown-css/4.0.0/github-markdown.min.css">
-            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.7.2/styles/default.min.css">
-            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/github-markdown-css/4.0.0/github-markdown.min.css">
-  
-<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.7.2/highlight.min.js"></script>
-<!--<script>hljs.highlightAll();</script>-->
-
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tocbot/4.27.4/tocbot.css">
+        </div>
+        <div class="at_center">
+            <div class="article_title">
+                <h1>
+                         <span>
+                如何在cloudflare自定义静态网页生成?
+                </span>
+                </h1>
 
 
+            </div>
+            <div class="article_info">
+                <div class="article_info_author">
+                    codeman
+                </div>
+                <div class="article_info_time">
+                    2024年07月08日 06:35
+                </div>
 
-        </head>
-        <body>
-        <div class="article_container">
-        <div class="js-toc toc"></div>
-        <div class="article_content markdown-body markdown">
-             <h1>如何在cloudflare自定义静态网页生成？</h1>
-<h2>cloudflare 支持哪些静态网页生成？</h2>
+                <div class="article_info_location">
+                    上海
+                </div>
+
+            </div>
+        </div>
+
+        <div class="at_right">
+
+        </div>
+
+    </div>
+
+    <div class="articlec">
+        <div class="article_left_content"></div>
+
+        <div class="container">
+            <div class="article_content markdown-body markdown" id="markdown">
+                <h2 id="my-prefix-cloudflare-支持哪些静态网页生成">cloudflare 支持哪些静态网页生成？</h2>
 <p><img src="./assets/%E5%A6%82%E4%BD%95%E5%9C%A8cloudflare%E8%87%AA%E5%AE%9A%E4%B9%89%E9%9D%99%E6%80%81%E9%A1%B5%E9%9D%A2%E7%94%9F%E6%88%90-1720341092898.png" alt="常见静态网页生成"></p>
-<h2>为什么不直接使用默认支持的框架？</h2>
+<h2 id="my-prefix-为什么不直接使用默认支持的框架">为什么不直接使用默认支持的框架？</h2>
 <p>默认框架使用起来比较繁琐，我只需要一个能把markdown转成HTML的简单框架即可。
 同时默认框架对自定义主题这方面，对于我一个新手来说比较繁琐。</p>
 <p>因此我决定自己做一个简单的框架</p>
-<h2>如何在cloud flare上使用自定义的框架？</h2>
+<h2 id="my-prefix-如何在cloud-flare上使用自定义的框架">如何在cloud flare上使用自定义的框架？</h2>
 <p><img src="./assets/%E5%A6%82%E4%BD%95%E5%9C%A8cloudflare%E8%87%AA%E5%AE%9A%E4%B9%89%E9%9D%99%E6%80%81%E9%A1%B5%E9%9D%A2%E7%94%9F%E6%88%90-1720341275433.png" alt="1"></p>
 <p>只需要三步</p>
 <ol>
@@ -36,40 +65,82 @@
 <li>输入构建命令</li>
 <li>输入构建输出目录</li>
 </ol>
-<h3>那自定义的框架应该是怎么样的？</h3>
-<h4>框架构建</h4>
+<h3 id="my-prefix-那自定义的框架应该是怎么样的">那自定义的框架应该是怎么样的？</h3>
+<h4 id="my-prefix-框架构建">框架构建</h4>
 <p><img src="./assets/%E5%A6%82%E4%BD%95%E5%9C%A8cloudflare%E8%87%AA%E5%AE%9A%E4%B9%89%E9%9D%99%E6%80%81%E9%A1%B5%E9%9D%A2%E7%94%9F%E6%88%90-1720341591005.png" alt="2"></p>
 <p>建一个项目，package.json中 增加一条build的script，
 命令是</p>
 <pre><code class="language-js">node build/build.js
 </code></pre>
 <p>即执行项目目录下build文件夹中的build.js</p>
-<h4>构建输出结果</h4>
+<h4 id="my-prefix-构建输出结果">构建输出结果</h4>
 <p>即上面build.js将生成的静态文件放到项目哪个文件夹里，我这里是放到了项目根目录下的
 disk文件夹中</p>
 <p><img src="./assets/%E5%A6%82%E4%BD%95%E5%9C%A8cloudflare%E8%87%AA%E5%AE%9A%E4%B9%89%E9%9D%99%E6%80%81%E9%A1%B5%E9%9D%A2%E7%94%9F%E6%88%90-1720341813238.png" alt="3"></p>
-<h3>如何在cloud flare上部署</h3>
+<h3 id="my-prefix-如何在cloud-flare上部署">如何在cloud flare上部署</h3>
 <p>除了上面的设置，和使用其他框架部署是一样的</p>
 
+            </div>
+            <div class="article_foot"></div>
         </div>
+        <div class="toc-container">
+            <div class="toc" id="toc">
+                <!-- TOC -->
+            </div>
         </div>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/tocbot/4.27.4/tocbot.min.js">
-    
+    </div>
+</div>
 
-    </script> 
-    
-<!--    <script >-->
-<!--        tocbot.init({-->
-<!--  // Where to render the table of contents.-->
-<!--  tocSelector: '.toc',-->
-<!--  // Where to grab the headings to build the table of contents.-->
-<!--  contentSelector: '.article_content',-->
-<!--  // Which headings to grab inside of the contentSelector element.-->
-<!--  headingSelector: 'h1, h2, h3',-->
-<!--  // For headings inside relative or absolute positioned containers within content.-->
-<!--  hasInnerContainers: true,-->
-<!--});-->
-<!--    </script>-->
-        </body>
-        </html>
-      
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/tocbot/4.27.4/tocbot.min.js"></script>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const selectors = 'h1, h2, h3, h4, h5, h6';
+        const content = document.getElementById('markdown');
+        const tocContent = document.getElementById('toc');
+        const headings = content.querySelectorAll(selectors);
+
+        // 生成 TOC
+        const toc = document.createElement('div');
+        headings.forEach(heading => {
+            // 生成标题ID
+            if (!heading.id) {
+                heading.id = 'toc-' + heading.textContent.toLowerCase().replace(/\\s+/g, '-');
+            }
+
+            // 计算标题级别
+            const level = parseInt(heading.tagName[1]);
+
+            // 创建 TOC 项目
+            const link = document.createElement('a');
+            link.href = '#' + heading.id;
+            link.textContent = heading.textContent;
+            link.classList.add(`toc-level-${level}`);
+
+            // 根据级别添加不同的 padding
+            link.style.paddingLeft = `${(level - 1) * 20}px`;
+
+            const item = document.createElement('div');
+            item.className = 'toc-item'
+            item.appendChild(link);
+
+
+
+            toc.appendChild(item);
+        });
+
+        tocContent.appendChild(toc);
+
+        // TOC link active state handling
+        const tocLinks = tocContent.querySelectorAll('a');
+        tocLinks.forEach(link => {
+            link.addEventListener('click', function () {
+                tocLinks.forEach(l => l.classList.remove('active'));
+                this.classList.add('active');
+            });
+        });
+    });
+</script>
+</body>
+</html>

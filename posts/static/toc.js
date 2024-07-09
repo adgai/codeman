@@ -1,17 +1,21 @@
-function generateI () {
-    let doc = getDoc();
+const { JSDOM } = require('jsdom');
+
+function generateI (html) {
+    let doc = getDoc(html);
     let generateIndex1 = generateIndex(doc)
     this.indexNo = generateIndex1
     console.log(generateIndex1)
 }
-function getDoc () {
+function getDoc (html) {
     var title = []
 
-    this.sleep(5000).then(() => {
-        // 这里写sleep之后需要去做的事情
-    })
-    let collection = HTMLCollection
-    collection = document.getElementsByClassName('content-html')[0].children
+    const dom = new JSDOM(html);
+    const document = dom.window.document;
+    // this.sleep(5000).then(() => {
+    //     // 这里写sleep之后需要去做的事情
+    // })
+    // let collection = new  HTMLCollection
+    collection = document.body.children
     for (var i = 0; i < collection.length; i++) {
         let tagName = collection[i].tagName
         let text = collection[i].innerText
@@ -61,7 +65,7 @@ function generateIndex (title) {
                 if (j - i1 > 1) {
                     // eslint-disable-next-line no-unused-vars
                     let subTitle = title.slice(i1 + 1, j)
-                    let tempIndex = this.generateIndex(subTitle)
+                    let tempIndex = generateIndex(subTitle)
                     indexNo.push({tag: title[i1].text, id: title[i1].id, indexNo: tempIndex})
                     i1 = j - 1
                     break
@@ -74,7 +78,7 @@ function generateIndex (title) {
                 }
             } else if (j === title.length - 1) {
                 let subTitle = title.slice(i1 + 1, j + 1)
-                let tempIndex = this.generateIndex(subTitle)
+                let tempIndex = generateIndex(subTitle)
                 indexNo.push({tag: title[i1].text, id: title[i1].id, indexNo: tempIndex})
                 i1 = j
                 break
@@ -84,3 +88,8 @@ function generateIndex (title) {
 
     return indexNo
 }
+
+// 对外暴露方法
+module.exports = {
+   generateI
+};
