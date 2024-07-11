@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "node build/build.js"
+    "build": "node build/build.js",
+    "build-debug": "node build/build.js --debug"
   },
   "private": true,
   "dependencies": {

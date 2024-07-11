@@ -1,3 +1,8 @@
+
+// build.js
+const args = process.argv.slice(2); // 获取命令行参数
+const isDebug = args.includes('--debug'); // 检查是否包含 --debug 参数
+
 const fs = require('fs-extra');
 const path = require('path');
 const { marked } = require('marked');
@@ -155,4 +160,6 @@ function watch() {
 
 // 运行构建过程并开始监视
 build();
-// watch();
+if (isDebug){
+    watch();
+}

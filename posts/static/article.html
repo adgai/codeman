@@ -72,6 +72,7 @@
         const content = document.getElementById('markdown');
         const tocContent = document.getElementById('toc');
         const headings = content.querySelectorAll(selectors);
+        let isScrolling = false;
 
         // 生成 TOC
         const toc = document.createElement('div');
@@ -105,13 +106,90 @@
         tocContent.appendChild(toc);
 
         // TOC link active state handling
+        // const tocLinks = tocContent.querySelectorAll('a');
+        // tocLinks.forEach(link => {
+        //     link.addEventListener('click', function () {
+        //         tocLinks.forEach(l => l.classList.remove('active'));
+        //         this.classList.add('active');
+        //     });
+        // });
+
+        // TOC link active state handling
         const tocLinks = tocContent.querySelectorAll('a');
         tocLinks.forEach(link => {
-            link.addEventListener('click', function () {
+            link.addEventListener('click', function (event) {
+                event.preventDefault();
+                isScrolling = true;
+
                 tocLinks.forEach(l => l.classList.remove('active'));
                 this.classList.add('active');
+
+                const targetId = this.getAttribute('href').substring(1);
+                const targetElement = document.getElementById(targetId);
+
+                window.scrollTo({
+                    top: targetElement.offsetTop,
+                    behavior: 'smooth'
+                });
+
+                setTimeout(() => {
+                    isScrolling = false;
+                }, 1000); // 等待滚动动画完成后再允许 scroll spy 逻辑
             });
         });
+
+        let ac = document.getElementsByClassName('article_content');
+        // Scroll spy logic
+        window.addEventListener('scroll', function (event) {
+            console.log(111111111111)
+            // event.preventDefault();
+            if (isScrolling) return;
+
+            let current = '';
+
+            headings.forEach(heading => {
+                const rect = heading.getBoundingClientRect();
+                if (rect.top <= 0) {
+                    current = heading.id;
+                }
+            });
+
+            tocLinks.forEach(link => {
+                link.classList.remove('active');
+                if (link.getAttribute('href').substring(1) === current) {
+                    link.classList.add('active');
+                }
+            });
+
+            // Prevent scrolling event from bubbling to window
+            let tc = document.getElementsByClassName('toc-container')[0];
+            tc.addEventListener('wheel', function (e) {
+                e.stopPropagation();
+
+            });
+            tocContent.addEventListener('wheel', function (e) {
+                e.stopPropagation();
+
+            });
+
+            // Ensure active TOC item is visible
+            const activeLink = tocContent.querySelector('a.active');
+            if (activeLink) {
+                const tocRect = tocContent.getBoundingClientRect();
+                const linkRect = activeLink.getBoundingClientRect();
+                console.log('linkRect.top' + linkRect.top)
+                console.log('tocRect.top' + tocRect.top)
+
+                console.log('linkRect.bottom' + linkRect.bottom)
+                console.log('tocRect.bottom' + tocRect.bottom)
+
+                if (linkRect.top > tocRect.top || linkRect.bottom < tocRect.bottom) {
+                    activeLink.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                }
+            }
+        });
+
+
     });
 </script>
 </body>

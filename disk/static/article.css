@@ -36,6 +36,7 @@ table td,table th{
 }
 .article_content{
     padding: 30px;
+    overflow-y: auto;
 }
 img{
     max-width: 100%;
@@ -68,6 +69,9 @@ img{
     overflow-y: auto; /* 如果 TOC 超出高度，则滚动 */
     margin-left: 20px; /* 与内容的间距 */
     /*padding: 100px;*/
+    /*overflow: hidden;*/
+    overscroll-behavior: contain;
+
 
 }
 .toc{
@@ -140,6 +144,9 @@ img{
     padding: 5px 20px; /* 填充整个宽度 */
     border-radius: 5px;
     transition: background-color 0.3s;
+
+    overscroll-behavior: contain;
+
 }
 
 .toc a:hover {
