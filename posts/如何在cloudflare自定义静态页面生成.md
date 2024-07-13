@@ -1,5 +1,5 @@
 ---
-date: 2024-07-07 22:35:00
+date: 2024-07-11 22:35:00
 title: 如何在cloudflare自定义静态网页生成?
 author: codeman
 location: 上海

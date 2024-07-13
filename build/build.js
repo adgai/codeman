@@ -66,16 +66,29 @@ function convertMarkdownToHtml(directory, outputDirectory,dt) {
 }
 
 // 在内存中生成新的index.html
-function generateNewIndexHtml(directory, originalIndexFilePath, outputIndexFilePath,dt) {
-    const indexHtml = fs.readFileSync(originalIndexFilePath, 'utf-8');
-    const dom = new JSDOM(indexHtml);
-    const document = dom.window.document;
+function generateNewIndexHtml(directory, originalIndexFilePath, outputIndexFilePath, dt) {
+    try {
+        // 读取原始的index.html文件内容
+        const indexHtml = fs.readFileSync(originalIndexFilePath, 'utf-8');
+        const dom = new JSDOM(indexHtml);
+        const document = dom.window.document;
 
-    const files = fs.readdirSync(directory);
-    const ul = document.createElement('ul');
+        // 获取目录中的所有文件
+        const files = fs.readdirSync(directory);
 
-    files.forEach(file => {
-        if (path.extname(file) === '.html' && file !== 'index.html') {
+        // 过滤和排序HTML文件，排除index.html，并根据日期倒序排序
+        const sortedFiles = files
+            .filter(file => path.extname(file) === '.html' && file !== 'index.html')
+            .sort((a, b) => {
+                const aDate = dt.get(path.basename(a, '.html'))?.date || new Date();
+                const bDate = dt.get(path.basename(b, '.html'))?.date || new Date();
+                return bDate - aDate; // 倒序排序
+            });
+
+        const ul = document.createElement('ul');
+
+        // 生成排序后的HTML文件列表
+        sortedFiles.forEach(file => {
             const li = document.createElement('li');
             const a = document.createElement('a');
             a.href = file;
@@ -86,15 +99,21 @@ function generateNewIndexHtml(directory, originalIndexFilePath, outputIndexFileP
             let newVar = dt.get(basename);
             let date = newVar === undefined ? new Date() : newVar.date;
             let htmlSpanElement = document.createElement('span');
-            htmlSpanElement.textContent =format(date, 'yyyy/MM/dd');
-            li.appendChild(htmlSpanElement)
+            htmlSpanElement.textContent = format(date, 'yyyy/MM/dd');
+            li.appendChild(htmlSpanElement);
             ul.appendChild(li);
-        }
-    });
+        });
 
-   document.getElementById('article').appendChild(ul);
+        // 将<ul>添加到<div id="article">中
+        const articleElement = document.getElementById('article');
+        articleElement.innerHTML = ''; // 清空之前的内容
+        articleElement.appendChild(ul);
 
-    fs.writeFileSync(outputIndexFilePath, dom.serialize(), 'utf-8');
+        // 将修改后的DOM序列化并写入新的index.html文件
+        fs.writeFileSync(outputIndexFilePath, dom.serialize(), 'utf-8');
+    } catch (error) {
+        console.error('Error generating index.html:', error);
+    }
 }
 
 // 复制assets文件夹
