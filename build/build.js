@@ -12,8 +12,6 @@ const {addDays, format}  =  require ("date-fns");
 const chokidar = require('chokidar');
 const { gfmHeadingId } =  require ("marked-gfm-heading-id");
 
-const {generateI } = require('../posts/static/toc.js');
-
 // 确保目录存在
 function ensureDirectoryExistence(directory) {
     if (!fs.existsSync(directory)) {
