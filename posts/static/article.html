@@ -8,6 +8,9 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.7.2/styles/default.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tocbot/4.27.4/tocbot.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.7.2/highlight.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/medium-zoom/1.1.0/medium-zoom.min.js"
+            integrity="sha512-9ZKhgaFdKlsELap/dGw3Iaz5Bj+Las0XXZiRKYZaN9QArg6FtkD5rULNmNH4rTCTFxjPiBGr3MX8smRADRorDA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
 </head>
 <body>
 <div class="article">
@@ -132,6 +135,7 @@
                     behavior: 'smooth'
                 });
 
+
                 setTimeout(() => {
                     isScrolling = false;
                 }, 1000); // 等待滚动动画完成后再允许 scroll spy 逻辑
@@ -191,6 +195,17 @@
 
 
     });
+
+    mediumZoom('.data-zoomable'
+        , {
+            margin: 24,
+            background: '#f4f5f5',
+            scrollOffset: 0,
+            container: null,
+            template: null
+        }
+    )
+
 </script>
 </body>
 </html>

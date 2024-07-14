@@ -29,21 +29,41 @@ function convertMarkdownToHtml(directory, outputDirectory,dt) {
         headerIds: true, // 启用 headerIds 选项
     };
 
+    // 创建自定义 renderer
+    const renderer = new marked.Renderer();
+
+// 重写 image 方法，为 img 标签添加 class
+    renderer.image = function(href, title, text) {
+        const className = 'data-zoomable'; // 你想添加的 class
+        let out = '<img class="' + className + '" src="' + href.href + '" alt="' +  href.text + '"';
+        if (title) {
+            out += ' title="' + title + '"';
+        }
+        out += this.options.xhtml ? '/>' : '>';
+        return out;
+    };
 
     files.forEach(file => {
         if (path.extname(file) === '.md') {
             const markdown = fs.readFileSync(path.join(directory, file), 'utf-8');
             const { content, data } = matter(markdown); // 解析 Markdown 文件
-
+            if (data.draft !== undefined && data.draft) {
+                return
+            }
             let basename = path.basename(file, '.md');
             console.log(basename)
             dt.set(basename,data)
             console.log(JSON.stringify(dt))
             const options = {
                 prefix: "my-prefix-",
+                renderer : renderer
             };
 
             marked.use(gfmHeadingId(options));
+
+            // 重写 image 方法，为 img 标签添加 class
+
+
             const html = marked(content,options);
             // 读取 static/article.html
             const templatePath = path.join(__dirname, '../posts/static/article.html');

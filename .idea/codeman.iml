@@ -11,5 +11,6 @@
     <orderEntry type="library" name="github-markdown-css" level="application" />
     <orderEntry type="library" name="highlight.js" level="application" />
     <orderEntry type="library" name="tocbot" level="application" />
+    <orderEntry type="library" name="medium-zoom" level="application" />
   </component>
 </module>
