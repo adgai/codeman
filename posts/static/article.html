@@ -4,11 +4,13 @@
     <meta charset="UTF-8">
     <title>文章标题</title>
     <link rel="stylesheet" type="text/css" href="./static/article.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/github-markdown-css/4.0.0/github-markdown.min.css">
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/github-markdown-css/4.0.0/github-markdown.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.7.2/styles/default.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.7.2/highlight.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/medium-zoom/1.1.0/medium-zoom.min.js"
-            integrity="sha512-9ZKhgaFdKlsELap/dGw3Iaz5Bj+Las0XXZiRKYZaN9QArg6FtkD5rULNmNH4rTCTFxjPiBGr3MX8smRADRorDA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+            integrity="sha512-9ZKhgaFdKlsELap/dGw3Iaz5Bj+Las0XXZiRKYZaN9QArg6FtkD5rULNmNH4rTCTFxjPiBGr3MX8smRADRorDA=="
+            crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
 </head>
 <body>
@@ -20,9 +22,7 @@
         <div class="at_center">
             <div class="article_title">
                 <h1>
-                         <span>
-                <!-- TITLE -->
-                </span>
+                    <!-- TITLE -->
                 </h1>
 
 
@@ -57,11 +57,19 @@
             </div>
             <div class="article_foot"></div>
         </div>
+
+        <div class="gotop">
+            <div class="rocket" >
+                <img src="./assets/icon/rocket.svg" alt="dsfs"/>
+            </div>
+        </div>
+
         <div class="toc-container">
             <div class="toc" id="toc">
                 <!-- TOC -->
             </div>
         </div>
+
     </div>
 </div>
 
@@ -99,7 +107,6 @@
             const item = document.createElement('div');
             item.className = 'toc-item'
             item.appendChild(link);
-
 
 
             toc.appendChild(item);
@@ -156,6 +163,9 @@
                     current = heading.id;
                 }
             });
+            if (current === '') {
+                current = headings[0].id
+            }
 
             tocLinks.forEach(link => {
                 link.classList.remove('active');
@@ -187,11 +197,15 @@
                 console.log('tocRect.bottom' + tocRect.bottom)
 
                 if (linkRect.top > tocRect.top || linkRect.bottom < tocRect.bottom) {
-                    activeLink.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                    activeLink.scrollIntoView({behavior: 'smooth', block: 'nearest'});
                 }
             }
         });
 
+        let rocket = document.getElementsByClassName('rocket')[0];
+        rocket.addEventListener('click',function () {
+            window.scrollTo(top)
+        })
 
     });
 

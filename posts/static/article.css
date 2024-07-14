@@ -31,8 +31,6 @@ table td,table th{
     overflow: hidden;/**溢出隐藏**/
     white-space: nowrap;/**不换行**/
     text-overflow: ellipsis;/**溢出不可见部分使用...代替**/
-
-
 }
 .article_content{
     padding: 30px;
@@ -64,7 +62,7 @@ img{
     /*position: fixed; !* 或使用 position: fixed *!*/
     /*top: 100px; !* 固定在距离顶部20px的位置 *!*/
     /*right: 100px;*/
-    width: 25%;
+    width: 20%;
     max-height: 600px; /* 保持 TOC 在可视区域内 */
     overflow-y: auto; /* 如果 TOC 超出高度，则滚动 */
     margin-left: 20px; /* 与内容的间距 */
@@ -76,7 +74,7 @@ img{
 }
 .toc{
     max-width: 300px;    background-color: #ffffff;
-    margin-left: 100px;
+    /*margin-left: 100px;*/
     border-radius: 8px;
     box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
 }
@@ -175,4 +173,15 @@ img{
 }
 h2{
     align-items: center;
+}
+.gotop{
+ min-width: 5%;
+}
+.rocket{
+    position: sticky;
+    /* position: relative; */
+    top: 75%;
+    left: 200px;
+    transform: rotate(-45deg);
+    /*background-image: "../assets/img/rocket.png";*/
 }
