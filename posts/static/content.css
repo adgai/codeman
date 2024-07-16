@@ -14,11 +14,27 @@
 
 
 }
+.main{
+    display: flex;
+    flex-direction: row;
+}
 .home{
     margin-right: auto;
     margin-left: auto;
     /* display: flex; */
     max-width: 960px;
+    /*min-width: 50%;   */
+    width: 50%;
+}
+.left{
+    width: 25%;
+    min-width: 25%;
+    /*background-image: url("../assets/img/iron-man-1.png");*/
+    /*background-size: 100% 100%; !* 宽度为100px，高度自动 *!*/
+
+}
+.right{    width: 25%;
+    min-width: 25%
 }
 
 .content ul li{
@@ -29,15 +45,16 @@
 }
 body{
     margin: 0;
+    /*background-image: url("../assets/img/iron-man-1.png") no-repeat;*/
 }
 html{
     background-color: #f4f5f5;
 }
 .main{
     padding-top: 30px;
-    padding-right: 100px;
-    padding-left: 100px;
-    height: 100%;
+    /*padding-right: 100px;*/
+    /*padding-left: 100px;*/
+    height: 2000px;
     min-height:600px;
 }
 .article{

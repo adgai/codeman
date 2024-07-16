@@ -1,4 +1,4 @@
-.header{
+.header_common{
     display: flex;
     align-items: center;
     /*border-bottom: ;*/
@@ -7,6 +7,7 @@
     -webkit-box-shadow: 0 1px 3px rgba(26, 26, 26, .1);
     box-shadow: 0 1px 3px rgba(26, 26, 26, .1);
     background-clip: content-box;
+    position: relative;
 }
 
 .header_left{
@@ -103,4 +104,83 @@ a.button:hover {
 
 a.button:active {
     background-color: #1e6f9f;
+}
+.PageHeader {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    -webkit-transition: -webkit-transform .3s;
+    transition: -webkit-transform .3s;
+    transition: transform .3s;
+    transition: transform .3s, -webkit-transform .3s;
+}
+.QuestionHeader-main {
+    display: flex;
+    align-items: center;
+    flex-direction: row;
+    /*margin-left: 20%;*/
+    font-size: 15px;
+    width: 50%;
+}
+.QuestionHeader-content {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-pack: justify;
+    -ms-flex-pack: justify;
+    justify-content: space-between;
+    width: 100%;
+    height: 100%;
+    /*padding: 0 16px;*/
+    /*margin: 0 auto;*/
+}
+
+.PageHeader {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    -webkit-transition: -webkit-transform .3s;
+    transition: -webkit-transform .3s;
+    transition: transform .3s;
+    transition: transform .3s, -webkit-transform .3s;
+}
+
+.PageHeader:not(.is-shown) {
+    -webkit-transform: translateY(100%);
+    transform: translateY(100%);
+}
+
+.header.is-fixed {
+    width: 100%;
+    position: fixed;
+    z-index: 2;
+    -webkit-font-smoothing: subpixel-antialiased;
+}
+.header{
+    height: 60px;
+
+    position: relative;
+    z-index: 100;
+    min-width: 1032px;
+    overflow: hidden;
+    background: #fff;
+    -webkit-box-shadow: 0 1px 3px rgba(26, 26, 26, .1);
+    box-shadow: 0 1px 3px rgba(26, 26, 26, .1);
+    background-clip: content-box;
+}
+
+.header.is-hidden .header_common {
+    -webkit-transform: translateY(-100%);
+    transform: translateY(-100%);
+}
+
+.QuestionHeader-left{
+    width: 25%;
+}
+.QuestionHeader-right{
+    width: 25%;
 }
