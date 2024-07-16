@@ -184,3 +184,6 @@ a.button:active {
 .QuestionHeader-right{
     width: 25%;
 }
+.header_flow{
+    width: 100%;
+}
