@@ -12,5 +12,7 @@
     <orderEntry type="library" name="highlight.js" level="application" />
     <orderEntry type="library" name="tocbot" level="application" />
     <orderEntry type="library" name="medium-zoom" level="application" />
+    <orderEntry type="library" name="default" level="application" />
+    <orderEntry type="library" name="gitment.browser" level="application" />
   </component>
 </module>

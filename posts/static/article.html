@@ -12,6 +12,10 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/medium-zoom/1.1.0/medium-zoom.min.js"
             integrity="sha512-9ZKhgaFdKlsELap/dGw3Iaz5Bj+Las0XXZiRKYZaN9QArg6FtkD5rULNmNH4rTCTFxjPiBGr3MX8smRADRorDA=="
             crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <link rel="stylesheet" href="https://imsun.github.io/gitment/style/default.css">
+    <script src="https://imsun.github.io/gitment/dist/gitment.browser.js"></script>
+
+
 
 </head>
 <body>
@@ -57,6 +61,7 @@
                 <!-- CONTENT -->
             </div>
             <div class="article_foot"></div>
+            <div id="article_git_comment"></div>
         </div>
 
         <div class="gotop">
@@ -219,6 +224,19 @@
             template: null
         }
     )
+
+
+    const  gitment = new Gitment({
+        id: window.location.pathname, // 可选。默认为 location.href
+        owner: 'adgai',
+        repo: 'codeman_comment',
+        oauth: {
+            client_id: 'Ov23liMACSuZ9jVBOnVf',
+            client_secret: '4cfdb0ebef99eeef52e02e499e2cad6c40f0cd2b',
+        },
+    })
+
+    gitment.render('article_git_comment')
 
 </script>
 </body>
