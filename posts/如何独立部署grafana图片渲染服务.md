@@ -282,10 +282,6 @@ curl --location --request GET
 
 按下面步骤获取到token  
 
-```js
-glsa_5y1sSxJxR9hNEks2cbtAJnYfQEBuAkk6_cbbfbe80
-```
-
 
 ![](./assets/如何独立部署grafana图片渲染服务-1721738917271.png)
 
@@ -310,7 +306,7 @@ src/browser/browser.ts
 ```js
 
 page.setExtraHTTPHeaders({
-          'Authorization':'Bearer glsa_5y1sSxJxR9hNEks2cbtAJnYfQEBuAkk6_cbbfbe80'
+          'Authorization':'Bearer token'
         })
 // 在这一行上面添加上面的内容 Bearer 后面的就是前面获取到的token
 return page.goto(options.url, { waitUntil: 'networkidle0', timeout: options.timeout * 1000 });
