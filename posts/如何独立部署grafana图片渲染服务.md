@@ -167,7 +167,7 @@ http://localhost:3000/
 
 **同时安装go 的时候最好使用 下载解压配置环境变量的方式**
 
-### 4.7. renderKey 怎么获取（需要看最终方法跳过这个）
+### 4.7. renderKey 怎么获取（需要看最终方法跳过这个 直接看4.9）
 
 处理 /render 接口的代码位于
 
@@ -229,7 +229,7 @@ curl --location --request GET '127.0.0.1:8081/render?url=http://localhost:3000/d
 
 ![](./assets/如何独立部署grafana图片渲染服务-1721561398229.png)
 
-### 4.8. 4.7中描述的方式可以达到目的，但是需要修改grafana的代码
+### 4.8. 4.7中描述的方式可以达到目的，但是需要修改grafana的代码 （需要看最终方法跳过这个 直接看4.9）
 那么有没有更好的方式？ 有！！！
 
 给grafana配置jwt，就可以了。
@@ -273,3 +273,71 @@ curl --location --request GET
 ```
 
 ![](./assets/如何独立部署grafana图片渲染服务-1721566099553.png)
+
+### 4.9 终极简单方案
+
+介绍一下原理，在render 调 grafana的时候在header中传递 grafana的 token 给grafana
+
+#### 4.9.1 获取 token
+
+按下面步骤获取到token  
+
+```js
+glsa_5y1sSxJxR9hNEks2cbtAJnYfQEBuAkk6_cbbfbe80
+```
+
+
+![](./assets/如何独立部署grafana图片渲染服务-1721738917271.png)
+
+
+![](./assets/如何独立部署grafana图片渲染服务-1721738966451.png)
+
+![](./assets/如何独立部署grafana图片渲染服务-1721738995671.png)
+
+![](./assets/如何独立部署grafana图片渲染服务-1721739016871.png)
+
+
+![](./assets/如何独立部署grafana图片渲染服务-1721739036979.png)
+
+#### 4.9.2 如何传递token
+
+修改render （grafana-image-render）代码
+
+```json
+src/browser/browser.ts
+```
+
+```js
+
+page.setExtraHTTPHeaders({
+          'Authorization':'Bearer glsa_5y1sSxJxR9hNEks2cbtAJnYfQEBuAkk6_cbbfbe80'
+        })
+// 在这一行上面添加上面的内容 Bearer 后面的就是前面获取到的token
+return page.goto(options.url, { waitUntil: 'networkidle0', timeout: options.timeout * 1000 });
+
+```
+
+重新build
+
+```js
+yarn run build
+
+```
+
+然后重新启动 render
+
+```js
+node build/app.js server --port=8081
+```
+
+再调 render渲染接口，这次不传renderKey 也不传jwt token，也可以获取到截图了
+```js
+curl --location --request GET '127.0.0.1:8081/render?url=http://localhost:3000/d-solo/dds8i1mqqa680e/new-dashboard?panelId=1%26orgId=1%26render=1%26viewPanel=%26from=1721736889194%26to=1721738490788&domain=localhost' \
+--header 'X-Auth-Token: -' \
+--header 'User-Agent: Apifox/1.0.0 (https://apifox.com)'
+```
+
+
+![](./assets/如何独立部署grafana图片渲染服务-1721739661564.png)
+
+完结撒花
