@@ -3,7 +3,6 @@ date: 2024-07-21 20:44:00
 title: auth0如何生成jwt
 author: codeman
 location: 上海
-draft: true
 ---
 ## 1 创建应用
 ![](./assets/auth0创建jwt-1721742205776.png)
