@@ -72,6 +72,7 @@ function convertMarkdownToHtml(directory, outputDirectory,dt) {
             const outputHtml = templateHtml.replace('<!-- CONTENT -->', html)
                 .replace('<!-- AUTHOR -->', data.author)
                 .replace('<!-- TITLE -->', data.title)
+                .replace('<!-- TITLE -->', data.title)
                 .replace('<!-- TIME -->', format(data.date, 'yyyy年MM月dd日 HH:mm'))
                 .replace('<!-- LOCATION -->', data.location)
 
