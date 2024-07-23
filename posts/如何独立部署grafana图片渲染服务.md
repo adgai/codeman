@@ -285,8 +285,8 @@ curl --location --request GET
 
 ![](./assets/如何独立部署grafana图片渲染服务-1721738917271.png)
 
+![](./assets/如何独立部署grafana图片渲染服务-1721740624096.png)
 
-![](./assets/如何独立部署grafana图片渲染服务-1721738966451.png)
 
 ![](./assets/如何独立部署grafana图片渲染服务-1721738995671.png)
 
