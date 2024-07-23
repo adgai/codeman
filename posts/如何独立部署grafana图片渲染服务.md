@@ -259,7 +259,7 @@ url_login = true
 allow_assign_grafana_admin = true
 skip_org_role_sync = false
 ```
-其他的直接copy即可，需要注意的是 jwk_set_url 是怎么来的？参考另一篇文章：[auth0如何创建jwt](https://codeman.im/auth0%E5%A6%82%E4%BD%95%E7%94%9F%E6%88%90jwt)
+其他的直接copy即可，需要注意的是 jwk_set_url 是怎么来的？参考另一篇文章：[auth0如何创建jwt](https://codeman.im/auth0创建jwt)
 ```json
 jwk_set_url = https://dev-a6snru0l7etv5rov.us.auth0.com/.well-known/jwks.json
 ```
