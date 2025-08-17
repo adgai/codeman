@@ -4,7 +4,5 @@ title: 关于我
 author: codeman
 location: 上海
 ---
-# codeman
 
-## eamail
-zhanglei@codeman.im
+# I'm codeman.
