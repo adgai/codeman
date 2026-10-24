@@ -35,6 +35,13 @@ function renderSiteNav(nav, currentFile) {
     }).join('\n            ');
 }
 
+function renderBrand(template, siteConfig) {
+    return template
+        .replaceAll('<!-- SITE_BRAND -->', escapeHtml(siteConfig.brandName + siteConfig.brandSuffix))
+        .replaceAll('<!-- BRAND_NAME -->', escapeHtml(siteConfig.brandName))
+        .replaceAll('<!-- BRAND_SUFFIX -->', escapeHtml(siteConfig.brandSuffix));
+}
+
 // 确保目录存在
 function ensureDirectoryExistence(directory) {
     if (!fs.existsSync(directory)) {
@@ -112,7 +119,7 @@ function convertMarkdownToHtml(directory, outputDirectory, articleEntries, conte
             const html = rendered.window.document.body.innerHTML;
             // 读取 static/article.html
             const templatePath = path.join(__dirname, '../posts/static/article.html');
-            const templateHtml = fs.readFileSync(templatePath, 'utf8');
+            const templateHtml = renderBrand(fs.readFileSync(templatePath, 'utf8'), siteConfig);
             const htmlFileName = basename + '.html';
             const backLabel = siteConfig.backLabels[contentType];
 
@@ -136,21 +143,21 @@ function convertMarkdownToHtml(directory, outputDirectory, articleEntries, conte
 }
 
 // 在内存中生成新的index.html
-function generateNewIndexHtml(originalIndexFilePath, homeMarkdownFilePath, outputIndexFilePath, articleEntries, siteConfig) {
+function generateNewIndexHtml(originalIndexFilePath, homeContent, outputIndexFilePath, articleEntries, siteConfig) {
     // 读取原始的index.html文件内容
-    const indexHtml = fs.readFileSync(originalIndexFilePath, 'utf-8')
+    const indexHtml = renderBrand(fs.readFileSync(originalIndexFilePath, 'utf-8'), siteConfig)
         .replace('<!-- SITE_NAV -->', renderSiteNav(siteConfig.nav, 'index.html'));
     const dom = new JSDOM(indexHtml);
     const document = dom.window.document;
-    const { content } = matter(fs.readFileSync(homeMarkdownFilePath, 'utf-8'));
     const hero = document.querySelector('.hero');
-    hero.innerHTML = marked.parse(content);
+    hero.innerHTML = marked.parse(homeContent);
     const heroTitle = hero.querySelector('h1');
     if (!heroTitle) throw new Error('pages/home.md must contain a level-one heading');
     heroTitle.id = 'hero-title';
     const heroDescription = hero.querySelector('p');
     if (heroDescription) heroDescription.classList.add('hero-description');
-    document.title = `codeman.im · ${heroTitle.textContent}`;
+    document.title = `${siteConfig.brandName + siteConfig.brandSuffix} · ${heroTitle.textContent}`;
+    document.getElementById('posts-title').textContent = siteConfig.postsTitle;
 
     const sortedArticles = [...articleEntries].sort((a, b) => b.date - a.date);
 
@@ -206,7 +213,14 @@ function build() {
     const outputIndexFilePath = path.join(diskDirectory, 'index.html');
     const siteConfigPath = path.join(__dirname, '../site.config.js');
     delete require.cache[require.resolve(siteConfigPath)];
-    const siteConfig = require(siteConfigPath);
+    const home = matter(fs.readFileSync(homeMarkdownFilePath, 'utf-8'));
+    if (typeof home.data.brandName !== 'string' || typeof home.data.brandSuffix !== 'string' ||
+        !Array.isArray(home.data.nav) || !home.data.nav.length ||
+        home.data.nav.some(item => !item || typeof item.label !== 'string' || typeof item.href !== 'string') ||
+        typeof home.data.postsTitle !== 'string') {
+        throw new Error('pages/home.md must define brandName, brandSuffix, nav links, and postsTitle in front matter');
+    }
+    const siteConfig = { ...require(siteConfigPath), ...home.data };
     const articleCss = fs.readFileSync(path.join(postsDirectory, 'static/article.css'));
     const articleCssVersion = crypto.createHash('sha1').update(articleCss).digest('hex').slice(0, 8);
     const articleEntries = [];
@@ -222,7 +236,7 @@ function build() {
     convertMarkdownToHtml(pagesDirectory, diskDirectory, articleEntries, 'page', siteConfig, articleCssVersion);
 
     // 在内存中生成新的index.html并写入到disk目录
-    generateNewIndexHtml(originalIndexFilePath, homeMarkdownFilePath, outputIndexFilePath, articleEntries, siteConfig);
+    generateNewIndexHtml(originalIndexFilePath, home.content, outputIndexFilePath, articleEntries, siteConfig);
 
     // 复制assets文件夹
     copyAssetsDirectory(postsDirectory, diskDirectory,'assets');
