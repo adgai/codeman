@@ -22,6 +22,19 @@ function formatPostDate(date, includeTime = false) {
     return `${year}年${month}月${day}日 ${pad(date.getUTCHours())}:${pad(date.getUTCMinutes())}`;
 }
 
+function escapeHtml(value) {
+    return String(value).replace(/[&<>"']/g, char => ({
+        '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
+    })[char]);
+}
+
+function renderSiteNav(nav, currentFile) {
+    return nav.map(({ label, href }) => {
+        const current = href === currentFile ? ' class="is-current" aria-current="page"' : '';
+        return `<a${current} href="${escapeHtml(href)}">${escapeHtml(label)}</a>`;
+    }).join('\n            ');
+}
+
 // 确保目录存在
 function ensureDirectoryExistence(directory) {
     if (!fs.existsSync(directory)) {
@@ -42,11 +55,9 @@ function getPngDimensions(filePath) {
     }
 }
 
-// 读取posts文件夹中的Markdown文件，并转换为HTML文件
-function convertMarkdownToHtml(directory, outputDirectory,dt) {
+// 将文章或固定页面转换为根目录下的 HTML，保持现有 URL。
+function convertMarkdownToHtml(directory, outputDirectory, articleEntries, contentType, siteConfig, articleCssVersion) {
     const files = fs.readdirSync(directory);
-    const articleCss = fs.readFileSync(path.join(__dirname, '../posts/static/article.css'));
-    const articleCssVersion = crypto.createHash('sha1').update(articleCss).digest('hex').slice(0, 8);
 
     const options = {
         headerIds: true, // 启用 headerIds 选项
@@ -79,10 +90,7 @@ function convertMarkdownToHtml(directory, outputDirectory,dt) {
             if (data.draft !== undefined && data.draft) {
                 return
             }
-            let basename = path.basename(file, '.md');
-            console.log(basename)
-            dt.set(basename,data)
-            console.log(JSON.stringify(dt))
+            const basename = path.basename(file, '.md');
             const options = {
                 prefix: "my-prefix-",
                 renderer : renderer
@@ -103,65 +111,51 @@ function convertMarkdownToHtml(directory, outputDirectory,dt) {
             const html = rendered.window.document.body.innerHTML;
             // 读取 static/article.html
             const templatePath = path.join(__dirname, '../posts/static/article.html');
-            let templateHtml = fs.readFileSync(templatePath, 'utf8');
-            // generateI(html)
+            const templateHtml = fs.readFileSync(templatePath, 'utf8');
             const htmlFileName = basename + '.html';
+            const backLabel = siteConfig.backLabels[contentType];
 
-            let outputHtml = templateHtml.replace('<!-- CONTENT -->', html)
+            const outputHtml = templateHtml.replace('<!-- CONTENT -->', html)
+                .replace('<!-- SITE_NAV -->', renderSiteNav(siteConfig.nav, htmlFileName))
                 .replace('./static/article.css', `./static/article.css?v=${articleCssVersion}`)
-                .replace('<!-- AUTHOR -->', data.author)
-                .replace('<!-- TITLE -->', data.title)
-                .replace('<!-- TITLE -->', data.title)
+                .replaceAll('<!-- BACK_LABEL -->', escapeHtml(backLabel))
+                .replace('<!-- END_LABEL -->', escapeHtml(data.endLabel || '全文完'))
+                .replace('<!-- AUTHOR -->', escapeHtml(data.author))
+                .replaceAll('<!-- TITLE -->', escapeHtml(data.title))
                 .replace('<!-- TIME -->', formatPostDate(data.date, true))
-                .replace('<!-- LOCATION -->', data.location)
-                .replace('<body>', data.layout === 'directory' ? '<body class="directory-page">' : '<body>')
+                .replace('<!-- LOCATION -->', escapeHtml(data.location))
+                .replace('<body>', data.layout === 'directory' ? '<body class="directory-page">' : '<body>');
 
-            ;
-
-            if (data.layout === 'directory') {
-                outputHtml = outputHtml.replaceAll('返回文章列表', '返回首页').replace('全文完', '工具清单');
-            }
-
-            fs.writeFileSync(path.join(outputDirectory, htmlFileName), outputHtml, 'utf-8');
+            const outputPath = path.join(outputDirectory, htmlFileName);
+            if (fs.existsSync(outputPath)) throw new Error(`Duplicate output page: ${htmlFileName}`);
+            fs.writeFileSync(outputPath, outputHtml, 'utf-8');
+            if (contentType === 'post') articleEntries.push({ file: htmlFileName, title: data.title, date: data.date });
         }
     });
-    console.log(dt)
 }
 
 // 在内存中生成新的index.html
-function generateNewIndexHtml(directory, originalIndexFilePath, outputIndexFilePath, dt) {
+function generateNewIndexHtml(originalIndexFilePath, outputIndexFilePath, articleEntries, siteConfig) {
     try {
         // 读取原始的index.html文件内容
-        const indexHtml = fs.readFileSync(originalIndexFilePath, 'utf-8');
+        const indexHtml = fs.readFileSync(originalIndexFilePath, 'utf-8')
+            .replace('<!-- SITE_NAV -->', renderSiteNav(siteConfig.nav, 'index.html'));
         const dom = new JSDOM(indexHtml);
         const document = dom.window.document;
 
-        // 获取目录中的所有文件
-        const files = fs.readdirSync(directory);
-
-        // 过滤和排序HTML文件，排除index.html，并根据日期倒序排序
-        const sortedFiles = files
-            .filter(file => path.extname(file) === '.html' && file !== 'index.html' && dt.get(path.basename(file, '.html'))?.showOnHome !== false)
-            .sort((a, b) => {
-                const aDate = dt.get(path.basename(a, '.html'))?.date || new Date();
-                const bDate = dt.get(path.basename(b, '.html'))?.date || new Date();
-                return bDate - aDate; // 倒序排序
-            });
+        const sortedArticles = [...articleEntries].sort((a, b) => b.date - a.date);
 
         const ul = document.createElement('ul');
 
         // 生成排序后的HTML文件列表
-        sortedFiles.forEach(file => {
+        sortedArticles.forEach(({ file, title, date }) => {
             const li = document.createElement('li');
             const a = document.createElement('a');
             a.href = file;
-            const basename = path.basename(file, '.html');
-            a.textContent = dt.get(basename)?.title || basename;
-            let newVar = dt.get(basename);
-            let date = newVar === undefined ? new Date() : newVar.date;
-            let htmlSpanElement = document.createElement('span');
-            htmlSpanElement.textContent = formatPostDate(date);
-            li.appendChild(htmlSpanElement);
+            a.textContent = title;
+            const dateLabel = document.createElement('span');
+            dateLabel.textContent = formatPostDate(date);
+            li.appendChild(dateLabel);
             li.appendChild(a);
             ul.appendChild(li);
         });
@@ -199,12 +193,16 @@ function clearOutputDirectory(directory) {
 // 主构建过程
 function build() {
     const postsDirectory = path.join(__dirname, '../posts');
+    const pagesDirectory = path.join(__dirname, '../pages');
     const diskDirectory = path.join(__dirname, '../disk');
     const originalIndexFilePath = path.join(__dirname, '../index.html');
     const outputIndexFilePath = path.join(diskDirectory, 'index.html');
-
-    var dt = new Map();
-
+    const siteConfigPath = path.join(__dirname, '../site.config.js');
+    delete require.cache[require.resolve(siteConfigPath)];
+    const siteConfig = require(siteConfigPath);
+    const articleCss = fs.readFileSync(path.join(postsDirectory, 'static/article.css'));
+    const articleCssVersion = crypto.createHash('sha1').update(articleCss).digest('hex').slice(0, 8);
+    const articleEntries = [];
 
     // 清空输出目录
     clearOutputDirectory(diskDirectory);
@@ -212,14 +210,16 @@ function build() {
     // 确保输出目录存在
     ensureDirectoryExistence(diskDirectory);
 
-    // 转换Markdown文件并将HTML文件写入到disk目录
-    convertMarkdownToHtml(postsDirectory, diskDirectory,dt);
+    // 两类内容共用模板，但首页文章列表只收录 posts/。
+    convertMarkdownToHtml(postsDirectory, diskDirectory, articleEntries, 'post', siteConfig, articleCssVersion);
+    convertMarkdownToHtml(pagesDirectory, diskDirectory, articleEntries, 'page', siteConfig, articleCssVersion);
 
     // 在内存中生成新的index.html并写入到disk目录
-    generateNewIndexHtml(diskDirectory, originalIndexFilePath, outputIndexFilePath,dt);
+    generateNewIndexHtml(originalIndexFilePath, outputIndexFilePath, articleEntries, siteConfig);
 
     // 复制assets文件夹
     copyAssetsDirectory(postsDirectory, diskDirectory,'assets');
+    copyAssetsDirectory(pagesDirectory, diskDirectory,'assets');
     copyAssetsDirectory(postsDirectory, diskDirectory,'static');
 
     console.log('Markdown files converted and new index.html generated in disk directory.');
@@ -227,16 +227,19 @@ function build() {
 
 // 监视assets文件夹并在变更时重新构建
 function watch() {
-    const assetsDirectory = path.join(__dirname, '../posts/static');
-
-    chokidar.watch(assetsDirectory, { ignoreInitial: true })
-        .on('all', (event, path) => {
-        console.log(`Detected ${event} on ${path}. Rebuilding...`);
+    const sources = [
+        path.join(__dirname, '../posts'),
+        path.join(__dirname, '../pages'),
+        path.join(__dirname, '../index.html'),
+        path.join(__dirname, '../site.config.js'),
+    ];
+    chokidar.watch(sources, { ignoreInitial: true })
+        .on('all', (event, changedPath) => {
+        console.log(`Detected ${event} on ${changedPath}. Rebuilding...`);
         build();
     });
 
-
-    console.log(`Watching for changes in ${assetsDirectory}`);
+    console.log(`Watching for changes in ${sources.join(', ')}`);
 }
 
 // 运行构建过程并开始监视

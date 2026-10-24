@@ -3,8 +3,8 @@ date: 2026-10-24 00:00:00
 title: 工具
 author: codeman
 location: 上海
-showOnHome: false
 layout: directory
+endLabel: 工具清单
 ---
 
 排版示例 · 以下工具名称仅用于展示，暂未配置链接。

@@ -17,11 +17,7 @@
     <div class="header-inner">
         <a class="site-brand" href="index.html" aria-label="Codeman.im 首页"><span class="brand-name">codeman</span><span class="brand-suffix">.im</span></a>
         <nav class="site-nav" aria-label="主导航">
-            <a href="index.html">文章</a>
-            <a href="thoughts.html">随想</a>
-            <a href="myproject.html">项目</a>
-            <a href="tools.html">工具</a>
-            <a href="aboutme.html">关于我</a>
+            <!-- SITE_NAV -->
         </nav>
     </div>
 </header>
@@ -29,7 +25,7 @@
 <main class="article-layout">
     <div class="article-main">
         <div class="article-heading">
-            <a class="back-link" href="index.html"><span aria-hidden="true">←</span> 返回文章列表</a>
+            <a class="back-link" href="index.html"><span aria-hidden="true">←</span> <!-- BACK_LABEL --></a>
             <h1><!-- TITLE --></h1>
             <div class="article-meta">
                 <span><!-- AUTHOR --></span>
@@ -41,8 +37,8 @@
             <!-- CONTENT -->
         </article>
         <div class="article-end">
-            <span>全文完</span>
-            <a href="index.html">返回文章列表 <span aria-hidden="true">→</span></a>
+            <span><!-- END_LABEL --></span>
+            <a href="index.html"><!-- BACK_LABEL --> <span aria-hidden="true">→</span></a>
         </div>
     </div>
     <aside class="toc-panel" aria-label="文章目录">
@@ -55,12 +51,6 @@
 
 <script>
     document.addEventListener('DOMContentLoaded', () => {
-        const currentNavLink = [...document.querySelectorAll('.site-nav a')].find(link => link.pathname === window.location.pathname);
-        if (currentNavLink) {
-            currentNavLink.classList.add('is-current');
-            currentNavLink.setAttribute('aria-current', 'page');
-        }
-
         const articleHeadings = [...document.querySelectorAll('#markdown h1, #markdown h2, #markdown h3, #markdown h4, #markdown h5, #markdown h6')];
         let sectionIndex = 0;
         let deepSectionIndex = 0;
