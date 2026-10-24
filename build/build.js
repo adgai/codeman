@@ -42,6 +42,42 @@ function renderBrand(template, siteConfig) {
         .replaceAll('<!-- BRAND_SUFFIX -->', escapeHtml(siteConfig.brandSuffix));
 }
 
+function parseHomeMarkdown(markdown) {
+    const document = new JSDOM(`<body>${marked.parse(markdown)}</body>`).window.document;
+    const elements = [...document.body.children];
+    const brandLink = elements[0]?.querySelector('a');
+    const brandText = brandLink?.textContent.trim();
+    const dotIndex = brandText?.lastIndexOf('.') ?? -1;
+    const navIndex = elements.findIndex(element => element.tagName === 'H2');
+    const navList = elements[navIndex + 1];
+    const postsHeading = elements[navIndex + 2];
+
+    if (elements[0]?.tagName !== 'P' || !brandLink || brandLink.getAttribute('href') !== 'index.html' ||
+        elements[0].textContent.trim() !== brandText || dotIndex < 1 || dotIndex === brandText.length - 1 ||
+        elements[1]?.tagName !== 'H1' || navIndex < 3 ||
+        navList?.tagName !== 'UL' || postsHeading?.tagName !== 'H2' ||
+        elements.length !== navIndex + 3) {
+        throw new Error('pages/home.md needs a brand link, a level-one title, a navigation list, and a recent-articles heading');
+    }
+
+    const nav = [...navList.children].map(item => {
+        const link = item.querySelector('a');
+        if (item.tagName !== 'LI' || !link || !link.textContent.trim() || !link.getAttribute('href')) {
+            throw new Error('Each navigation item in pages/home.md must be a Markdown link');
+        }
+        return { label: link.textContent.trim(), href: link.getAttribute('href') };
+    });
+    if (!nav.length) throw new Error('pages/home.md must contain at least one navigation link');
+
+    return {
+        brandName: brandText.slice(0, dotIndex),
+        brandSuffix: brandText.slice(dotIndex),
+        nav,
+        postsTitle: postsHeading.textContent.trim(),
+        heroHtml: elements.slice(1, navIndex).map(element => element.outerHTML).join('\n'),
+    };
+}
+
 // 确保目录存在
 function ensureDirectoryExistence(directory) {
     if (!fs.existsSync(directory)) {
@@ -143,14 +179,14 @@ function convertMarkdownToHtml(directory, outputDirectory, articleEntries, conte
 }
 
 // 在内存中生成新的index.html
-function generateNewIndexHtml(originalIndexFilePath, homeContent, outputIndexFilePath, articleEntries, siteConfig) {
+function generateNewIndexHtml(originalIndexFilePath, outputIndexFilePath, articleEntries, siteConfig) {
     // 读取原始的index.html文件内容
     const indexHtml = renderBrand(fs.readFileSync(originalIndexFilePath, 'utf-8'), siteConfig)
         .replace('<!-- SITE_NAV -->', renderSiteNav(siteConfig.nav, 'index.html'));
     const dom = new JSDOM(indexHtml);
     const document = dom.window.document;
     const hero = document.querySelector('.hero');
-    hero.innerHTML = marked.parse(homeContent);
+    hero.innerHTML = siteConfig.heroHtml;
     const heroTitle = hero.querySelector('h1');
     if (!heroTitle) throw new Error('pages/home.md must contain a level-one heading');
     heroTitle.id = 'hero-title';
@@ -213,14 +249,8 @@ function build() {
     const outputIndexFilePath = path.join(diskDirectory, 'index.html');
     const siteConfigPath = path.join(__dirname, '../site.config.js');
     delete require.cache[require.resolve(siteConfigPath)];
-    const home = matter(fs.readFileSync(homeMarkdownFilePath, 'utf-8'));
-    if (typeof home.data.brandName !== 'string' || typeof home.data.brandSuffix !== 'string' ||
-        !Array.isArray(home.data.nav) || !home.data.nav.length ||
-        home.data.nav.some(item => !item || typeof item.label !== 'string' || typeof item.href !== 'string') ||
-        typeof home.data.postsTitle !== 'string') {
-        throw new Error('pages/home.md must define brandName, brandSuffix, nav links, and postsTitle in front matter');
-    }
-    const siteConfig = { ...require(siteConfigPath), ...home.data };
+    const home = parseHomeMarkdown(fs.readFileSync(homeMarkdownFilePath, 'utf-8'));
+    const siteConfig = { ...require(siteConfigPath), ...home };
     const articleCss = fs.readFileSync(path.join(postsDirectory, 'static/article.css'));
     const articleCssVersion = crypto.createHash('sha1').update(articleCss).digest('hex').slice(0, 8);
     const articleEntries = [];
@@ -236,7 +266,7 @@ function build() {
     convertMarkdownToHtml(pagesDirectory, diskDirectory, articleEntries, 'page', siteConfig, articleCssVersion);
 
     // 在内存中生成新的index.html并写入到disk目录
-    generateNewIndexHtml(originalIndexFilePath, home.content, outputIndexFilePath, articleEntries, siteConfig);
+    generateNewIndexHtml(originalIndexFilePath, outputIndexFilePath, articleEntries, siteConfig);
 
     // 复制assets文件夹
     copyAssetsDirectory(postsDirectory, diskDirectory,'assets');

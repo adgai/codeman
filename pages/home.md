@@ -1,20 +1,15 @@
----
-brandName: codeman
-brandSuffix: .im
-nav:
-  - label: 文章
-    href: index.html
-  - label: 随想
-    href: thoughts.html
-  - label: 项目
-    href: myproject.html
-  - label: 工具
-    href: tools.html
-  - label: 关于我
-    href: aboutme.html
-postsTitle: 最近文章
----
+[codeman.im](index.html)
 
 # 代码改变生活
 
 code power
+
+## 导航
+
+- [文章](index.html)
+- [随想](thoughts.html)
+- [项目](myproject.html)
+- [工具](tools.html)
+- [关于我](aboutme.html)
+
+## 最近文章
