@@ -12,4 +12,4 @@ location: 上海
 | 项目          | 描述                       | 详细描述                                        | github |
 |-------------|--------------------------|---------------------------------------------|--------|
 | SpringbootUrlFullPath | Intellij idea 插件，快速复制url |                                             |  [Github](https://github.com/adgai/SpringbootUrlFullPath )|
-| ApolloConfigVisualization | apollo 配置在代码中可视化         | [详细介绍](https://codeman.im/Intellij_idea_Apollo配置可视化插件) |  [Github](https://github.com/adgai/ApolloConfigVisualization)|
+| ApolloConfigVisualization | apollo 配置在代码中可视化         | [详细介绍](./Intellij_idea_Apollo配置可视化插件.html) |  [Github](https://github.com/adgai/ApolloConfigVisualization)|

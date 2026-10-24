@@ -1,245 +1,230 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
-    <title>
-        <!-- TITLE -->
-    </title>
-    <link rel="stylesheet" type="text/css" href="./static/article.css">
-    <link rel="icon" type="image/x-icon" href="./assets/icon/gangtiexia.svg"/>
-    <link rel="stylesheet"
-          href="https://cdnjs.cloudflare.com/ajax/libs/github-markdown-css/4.0.0/github-markdown.min.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title><!-- TITLE --> · codeman.im</title>
+    <link rel="stylesheet" href="./static/header.css">
+    <link rel="icon" type="image/svg+xml" href="./assets/icon/gangtiexia.svg">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/github-markdown-css/4.0.0/github-markdown.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.7.2/styles/default.min.css">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.7.2/highlight.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/medium-zoom/1.1.0/medium-zoom.min.js"
-            integrity="sha512-9ZKhgaFdKlsELap/dGw3Iaz5Bj+Las0XXZiRKYZaN9QArg6FtkD5rULNmNH4rTCTFxjPiBGr3MX8smRADRorDA=="
-            crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-    <link rel="stylesheet" href="https://imsun.github.io/gitment/style/default.css">
-    <script src="https://imsun.github.io/gitment/dist/gitment.browser.js"></script>
-
-
-
+    <link rel="stylesheet" href="./static/article.css">
+    <script defer src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.7.2/highlight.min.js"></script>
+    <script defer src="https://cdnjs.cloudflare.com/ajax/libs/medium-zoom/1.1.0/medium-zoom.min.js"></script>
 </head>
 <body>
-<div class="article">
-    <div class="articlet">
-        <div class="at_left">
-
-        </div>
-        <div class="at_center">
-            <div class="article_title">
-                <h1>
-                    <!-- TITLE -->
-                </h1>
-
-
-            </div>
-            <div class="article_info">
-                <div class="article_info_author">
-                    <!-- AUTHOR -->
-                </div>
-                <div class="article_info_time">
-                    <!-- TIME -->
-                </div>
-
-                <div class="article_info_location">
-                    <!-- LOCATION -->
-                </div>
-
-            </div>
-        </div>
-
-        <div class="at_right">
-
-        </div>
-
+<header class="site-header">
+    <div class="header-inner">
+        <a class="site-brand" href="index.html" aria-label="Codeman.im 首页"><span class="brand-name">codeman</span><span class="brand-suffix">.im</span></a>
+        <nav class="site-nav" aria-label="主导航">
+            <a href="index.html">文章</a>
+            <a href="thoughts.html">随想</a>
+            <a href="myproject.html">项目</a>
+            <a href="tools.html">工具</a>
+            <a href="aboutme.html">关于我</a>
+        </nav>
     </div>
+</header>
 
-    <div class="articlec">
-        <div class="article_left_content"></div>
-
-        <div class="container">
-            <div class="article_content markdown-body markdown" id="markdown">
-                <!-- CONTENT -->
-            </div>
-            <div class="article_foot"></div>
-            <div id="article_git_comment"></div>
-        </div>
-
-        <div class="gotop">
-            <div class="rocket" >
-                <img src="./assets/icon/rocket.svg" alt="dsfs"/>
+<main class="article-layout">
+    <div class="article-main">
+        <div class="article-heading">
+            <a class="back-link" href="index.html"><span aria-hidden="true">←</span> 返回文章列表</a>
+            <h1><!-- TITLE --></h1>
+            <div class="article-meta">
+                <span><!-- AUTHOR --></span>
+                <span><!-- TIME --></span>
+                <span><!-- LOCATION --></span>
             </div>
         </div>
-
-        <div class="toc-container">
-            <div class="toc" id="toc">
-                <!-- TOC -->
-            </div>
+        <article id="markdown" class="article-content markdown-body">
+            <!-- CONTENT -->
+        </article>
+        <div class="article-end">
+            <span>全文完</span>
+            <a href="index.html">返回文章列表 <span aria-hidden="true">→</span></a>
         </div>
-
     </div>
-</div>
+    <aside class="toc-panel" aria-label="文章目录">
+        <p class="toc-title">本文目录</p>
+        <nav id="toc" class="toc-links"></nav>
+    </aside>
+</main>
 
-
-<script src="https://cdnjs.cloudflare.com/ajax/libs/tocbot/4.27.4/tocbot.min.js"></script>
+<button class="back-to-top" type="button" aria-label="回到顶部" hidden>↑</button>
 
 <script>
-    document.addEventListener("DOMContentLoaded", function () {
-        const selectors = 'h1, h2, h3, h4, h5, h6';
-        const content = document.getElementById('markdown');
-        const tocContent = document.getElementById('toc');
-        const headings = content.querySelectorAll(selectors);
-        let isScrolling = false;
-
-        // 生成 TOC
-        const toc = document.createElement('div');
-        headings.forEach(heading => {
-            // 生成标题ID
-            if (!heading.id) {
-                heading.id = 'toc-' + heading.textContent.toLowerCase().replace(/\\s+/g, '-');
-            }
-
-            // 计算标题级别
-            const level = parseInt(heading.tagName[1]);
-
-            // 创建 TOC 项目
-            const link = document.createElement('a');
-            link.href = '#' + heading.id;
-            link.textContent = heading.textContent;
-            link.classList.add(`toc-level-${level}`);
-
-            // 根据级别添加不同的 padding
-            link.style.paddingLeft = `${(level - 1) * 20}px`;
-
-            const item = document.createElement('div');
-            item.className = 'toc-item'
-            item.appendChild(link);
-
-
-            toc.appendChild(item);
-        });
-
-        tocContent.appendChild(toc);
-
-        // TOC link active state handling
-        // const tocLinks = tocContent.querySelectorAll('a');
-        // tocLinks.forEach(link => {
-        //     link.addEventListener('click', function () {
-        //         tocLinks.forEach(l => l.classList.remove('active'));
-        //         this.classList.add('active');
-        //     });
-        // });
-
-        // TOC link active state handling
-        const tocLinks = tocContent.querySelectorAll('a');
-        tocLinks.forEach(link => {
-            link.addEventListener('click', function (event) {
-                event.preventDefault();
-                isScrolling = true;
-
-                tocLinks.forEach(l => l.classList.remove('active'));
-                this.classList.add('active');
-
-                const targetId = this.getAttribute('href').substring(1);
-                const targetElement = document.getElementById(targetId);
-
-                window.scrollTo({
-                    top: targetElement.offsetTop,
-                    behavior: 'smooth'
-                });
-
-
-                setTimeout(() => {
-                    isScrolling = false;
-                }, 1000); // 等待滚动动画完成后再允许 scroll spy 逻辑
-            });
-        });
-
-        let ac = document.getElementsByClassName('article_content');
-        // Scroll spy logic
-        window.addEventListener('scroll', function (event) {
-            console.log(111111111111)
-            // event.preventDefault();
-            if (isScrolling) return;
-
-            let current = '';
-
-            headings.forEach(heading => {
-                const rect = heading.getBoundingClientRect();
-                if (rect.top <= 0) {
-                    current = heading.id;
-                }
-            });
-            if (current === '') {
-                current = headings[0].id
-            }
-
-            tocLinks.forEach(link => {
-                link.classList.remove('active');
-                if (link.getAttribute('href').substring(1) === current) {
-                    link.classList.add('active');
-                }
-            });
-
-            // Prevent scrolling event from bubbling to window
-            let tc = document.getElementsByClassName('toc-container')[0];
-            tc.addEventListener('wheel', function (e) {
-                e.stopPropagation();
-
-            });
-            tocContent.addEventListener('wheel', function (e) {
-                e.stopPropagation();
-
-            });
-
-            // Ensure active TOC item is visible
-            const activeLink = tocContent.querySelector('a.active');
-            if (activeLink) {
-                const tocRect = tocContent.getBoundingClientRect();
-                const linkRect = activeLink.getBoundingClientRect();
-                console.log('linkRect.top' + linkRect.top)
-                console.log('tocRect.top' + tocRect.top)
-
-                console.log('linkRect.bottom' + linkRect.bottom)
-                console.log('tocRect.bottom' + tocRect.bottom)
-
-                if (linkRect.top > tocRect.top || linkRect.bottom < tocRect.bottom) {
-                    activeLink.scrollIntoView({behavior: 'smooth', block: 'nearest'});
-                }
-            }
-        });
-
-        let rocket = document.getElementsByClassName('rocket')[0];
-        rocket.addEventListener('click',function () {
-            window.scrollTo(top)
-        })
-
-    });
-
-    mediumZoom('.data-zoomable'
-        , {
-            margin: 24,
-            background: '#f4f5f5',
-            scrollOffset: 0,
-            container: null,
-            template: null
+    document.addEventListener('DOMContentLoaded', () => {
+        const currentNavLink = [...document.querySelectorAll('.site-nav a')].find(link => link.pathname === window.location.pathname);
+        if (currentNavLink) {
+            currentNavLink.classList.add('is-current');
+            currentNavLink.setAttribute('aria-current', 'page');
         }
-    )
 
+        const articleHeadings = [...document.querySelectorAll('#markdown h1, #markdown h2, #markdown h3, #markdown h4, #markdown h5, #markdown h6')];
+        let sectionIndex = 0;
+        let deepSectionIndex = 0;
+        articleHeadings.forEach(heading => {
+            const id = heading.matches('h5, h6') ? `section-deep-${++deepSectionIndex}` : `section-${++sectionIndex}`;
+            if (!heading.id) heading.id = id;
+        });
+        const headings = articleHeadings;
+        const toc = document.getElementById('toc');
+        const panel = document.querySelector('.toc-panel');
 
-    // const  gitment = new Gitment({
-    //     id: window.location.pathname, // 可选。默认为 location.href
-    //     owner: 'adgai',
-    //     repo: 'codeman_comment',
-    //     oauth: {
-    //         client_id: 'Ov23liMACSuZ9jVBOnVf',
-    //         client_secret: '4cfdb0ebef99eeef52e02e499e2cad6c40f0cd2b',
-    //     },
-    // })
-    //
-    // gitment.render('article_git_comment')
+        headings.forEach(heading => {
+            const link = document.createElement('a');
+            link.href = `#${heading.id}`;
+            link.textContent = heading.textContent;
+            link.title = heading.textContent;
+            link.className = `toc-level-${heading.tagName[1]}`;
+            toc.appendChild(link);
+        });
 
+        if (!headings.length) panel.hidden = true;
+
+        const tocLinks = [...toc.querySelectorAll('a')];
+        let activeIndex = -1;
+        let navigatingToHeading = false;
+        let navigationFrame;
+
+        const revealActiveLink = link => {
+            if (panel.scrollHeight <= panel.clientHeight) return;
+            const panelRect = panel.getBoundingClientRect();
+            const linkRect = link.getBoundingClientRect();
+            if (linkRect.top >= panelRect.top + 12 && linkRect.bottom <= panelRect.bottom - 12) return;
+            const top = panel.scrollTop + linkRect.top - panelRect.top - (panel.clientHeight - linkRect.height) / 2;
+            const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+            panel.scrollTo({ top, behavior: reducedMotion ? 'instant' : 'smooth' });
+        };
+
+        const setActiveHeading = index => {
+            if (index === activeIndex) return;
+            if (activeIndex >= 0) tocLinks[activeIndex].classList.remove('active');
+            const activeLink = tocLinks[index];
+            activeLink.classList.add('active');
+            toc.style.setProperty('--indicator-y', `${activeLink.offsetTop}px`);
+            toc.style.setProperty('--indicator-height', `${activeLink.offsetHeight}px`);
+            toc.classList.add('has-active');
+            activeIndex = index;
+            revealActiveLink(activeLink);
+        };
+
+        const updateActiveHeading = () => {
+            if (!headings.length || navigatingToHeading) return;
+            let nextIndex = 0;
+            for (let index = 0; index < headings.length; index++) {
+                if (headings[index].getBoundingClientRect().top <= 120) nextIndex = index;
+                else break;
+            }
+            setActiveHeading(nextIndex);
+        };
+
+        const finishHeadingNavigation = () => {
+            if (!navigatingToHeading) return;
+            navigatingToHeading = false;
+            window.cancelAnimationFrame(navigationFrame);
+            toc.style.removeProperty('--indicator-duration');
+            updateActiveHeading();
+        };
+
+        tocLinks.forEach((link, index) => link.addEventListener('click', event => {
+            event.preventDefault();
+            window.cancelAnimationFrame(navigationFrame);
+            navigatingToHeading = true;
+            const startY = window.scrollY;
+            const maxY = document.documentElement.scrollHeight - window.innerHeight;
+            const targetY = Math.max(0, Math.min(maxY, startY + headings[index].getBoundingClientRect().top - 30));
+            const distance = targetY - startY;
+            const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+            const duration = reducedMotion ? 0 : Math.min(1050, Math.max(450, Math.abs(distance) * .14));
+            toc.style.setProperty('--indicator-duration', `${duration}ms`);
+            setActiveHeading(index);
+            history.pushState(null, '', link.hash);
+            if (!duration || Math.abs(distance) < 2) {
+                window.scrollTo({ top: targetY, behavior: 'instant' });
+                finishHeadingNavigation();
+                return;
+            }
+            let startedAt;
+            const animateScroll = now => {
+                if (startedAt === undefined) startedAt = now;
+                const progress = Math.min((now - startedAt) / duration, 1);
+                const eased = progress * progress * (3 - 2 * progress);
+                window.scrollTo({ top: startY + distance * eased, behavior: 'instant' });
+                if (progress < 1) navigationFrame = window.requestAnimationFrame(animateScroll);
+                else finishHeadingNavigation();
+            };
+            navigationFrame = window.requestAnimationFrame(animateScroll);
+        }));
+        window.addEventListener('wheel', finishHeadingNavigation, { passive: true });
+        window.addEventListener('touchstart', finishHeadingNavigation, { passive: true });
+        window.addEventListener('keydown', event => {
+            if (['ArrowUp', 'ArrowDown', 'PageUp', 'PageDown', 'Home', 'End', ' '].includes(event.key)) finishHeadingNavigation();
+        });
+
+        const topButton = document.querySelector('.back-to-top');
+        let scrollUpdatePending = false;
+        const updateScroll = () => {
+            if (scrollUpdatePending) return;
+            scrollUpdatePending = true;
+            window.requestAnimationFrame(() => {
+                updateActiveHeading();
+                topButton.hidden = window.scrollY < 500;
+                scrollUpdatePending = false;
+            });
+        };
+        window.addEventListener('scroll', updateScroll, { passive: true });
+        updateScroll();
+        topButton.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
+
+        const initialTarget = document.getElementById(window.location.hash.slice(1));
+        if (initialTarget) {
+            const alignInitialTarget = () => window.requestAnimationFrame(() => {
+                const previousBehavior = document.documentElement.style.scrollBehavior;
+                document.documentElement.style.scrollBehavior = 'auto';
+                initialTarget.scrollIntoView({ block: 'start' });
+                document.documentElement.style.scrollBehavior = previousBehavior;
+                updateScroll();
+            });
+            // 浏览器的首次 hash 定位可能晚于 load；等它完成后再对齐一次。
+            if (document.readyState === 'complete') window.setTimeout(alignInitialTarget, 300);
+            else window.addEventListener('load', () => window.setTimeout(alignInitialTarget, 300), { once: true });
+        }
+
+        if (window.mediumZoom) mediumZoom('.data-zoomable', { margin: 24, background: '#fff' });
+        if (window.hljs) document.querySelectorAll('pre code:not(.language-mermaid)').forEach(block => hljs.highlightElement(block));
+
+        document.querySelectorAll('#markdown pre').forEach(pre => {
+            const code = pre.querySelector('code');
+            if (!code) return;
+
+            const wrapper = document.createElement('div');
+            wrapper.className = 'code-block';
+            const toolbar = document.createElement('div');
+            toolbar.className = 'code-toolbar';
+            const language = document.createElement('span');
+            language.className = 'code-language';
+            language.textContent = [...code.classList].find(name => name.startsWith('language-'))?.slice(9) || '代码';
+            const copy = document.createElement('button');
+            copy.className = 'copy-code';
+            copy.type = 'button';
+            copy.textContent = '复制';
+            copy.setAttribute('aria-label', '复制代码');
+            copy.addEventListener('click', async () => {
+                try {
+                    await navigator.clipboard.writeText(code.textContent);
+                    copy.textContent = '已复制';
+                } catch {
+                    copy.textContent = '复制失败';
+                }
+                window.setTimeout(() => { copy.textContent = '复制'; }, 2000);
+            });
+            toolbar.append(language, copy);
+            pre.replaceWith(wrapper);
+            wrapper.append(toolbar, pre);
+        });
+    });
 </script>
 </body>
 </html>

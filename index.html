@@ -1,76 +1,42 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
-    <title>Codeman</title>
-    <link rel="stylesheet" type="text/css" href="./static/header.css">
-    <link rel="stylesheet" type="text/css" href="./static/content.css">
-    <script src="./static/header.js"></script>
-    <link rel="icon" type="image/x-icon" href="./assets/icon/gangtiexia.svg"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Codeman 的个人博客，记录技术实践、项目和日常思考。">
+    <title>codeman.im · 代码改变生活</title>
+    <link rel="stylesheet" href="./static/header.css">
+    <link rel="stylesheet" href="./static/content.css">
+    <link rel="icon" type="image/svg+xml" href="./assets/icon/gangtiexia.svg">
 </head>
 <body>
-<div class="header">
-    <div class="header_common">
-        <div class="header_left">
-            <div class="header_left_box">
-                <span>Codeman</span>
-            </div>
-        </div>
-
-        <div class="header_center">
-            <div>
-                <ul class="container">
-                    <li><a href="index.html">首页</a></li>
-                    <li><a href="thoughts.html">年少常有所感</a></li>
-                    <li><a href="myproject.html">我的项目</a></li>
-                    <li><a href="aboutme.html">关于我</a></li>
-                </ul>
-            </div>
-        </div>
-
-        <div class="header_right">
-        </div>
+<header class="site-header">
+    <div class="header-inner">
+        <a class="site-brand" href="index.html" aria-label="Codeman.im 首页"><span class="brand-name">codeman</span><span class="brand-suffix">.im</span></a>
+        <nav class="site-nav" aria-label="主导航">
+            <a class="is-current" href="index.html" aria-current="page">文章</a>
+            <a href="thoughts.html">随想</a>
+            <a href="myproject.html">项目</a>
+            <a href="tools.html">工具</a>
+            <a href="aboutme.html">关于我</a>
+        </nav>
     </div>
-    <div class="header_flow">
-        <div class="PageHeader">
-            <div class="QuestionHeader-content">
+</header>
 
-                <div class="QuestionHeader-left">
+<main class="page-shell">
+    <section class="hero" aria-labelledby="hero-title">
+        <h1 id="hero-title">代码改变生活</h1>
+        <p class="hero-description">code power</p>
+    </section>
 
-                </div>
+    <section class="posts-section" aria-labelledby="posts-title">
+        <div class="section-heading"><h2 id="posts-title">最近文章</h2></div>
+        <div id="article" class="article-list"></div>
+    </section>
+</main>
 
-                <div class="QuestionHeader-main">
-                    <div class="QuestionHeader-main-c">
-                        <h1 class="QuestionHeader-title">长风破浪会有时</h1>
-                    </div>
-
-                </div>
-                <div class="QuestionHeader-right">
-
-                </div>
-            </div>
-
-        </div>
-    </div>
-
-</div>
-
-<div class="main">
-    <div class="left"></div>
-    <div class="home">
-        <div class="slogan"><span>每天就是爬山</span></div>
-
-        <div class="content">
-
-            <div id ="article" class="article">
-
-            </div>
-        </div>
-    </div>
-    <div class="right"></div>
-
-</div>
-
-
+<footer class="site-footer">
+    <span>© codeman<span class="footer-suffix">.im</span></span>
+</footer>
 </body>
 </html>

@@ -4,4 +4,3 @@ title: 年少常有所感
 author: codeman
 location: 上海
 ---
-#  年少常有所感

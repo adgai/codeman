@@ -1,187 +1,121 @@
-.article_container{
-    max-width: 960px;
-    margin-left: auto;
-    margin-right: auto;
-    background-color: white;
-    -webkit-box-shadow: 0 1px 3px rgba(26, 26, 26, .1);
-    box-shadow: 0 1px 3px rgba(26, 26, 26, .1);
-    min-height: 100vh;
+.article-layout {
+    display: grid;
+    grid-template-columns: minmax(0, 720px) minmax(160px, 200px);
+    gap: 56px;
+    width: min(1050px, calc(100% - 48px));
+    margin: 0 auto;
+    padding: 52px 0 100px;
+}
+.article-main { min-width: 0; }
+.back-link { display: inline-flex; gap: 8px; align-items: center; margin-bottom: 36px; color: var(--accent); font-size: 13px; }
+.back-link:hover { text-decoration: underline; }
+.article-heading h1 { margin: 0 0 16px; font-size: clamp(30px, 3.8vw, 44px); font-weight: 750; line-height: 1.26; letter-spacing: -.055em; overflow-wrap: anywhere; }
+.article-meta { display: flex; flex-wrap: wrap; gap: 7px 14px; color: #8b98a6; font-size: 12px; }
+.article-meta span + span::before { content: "·"; margin-right: 14px; color: #adb7c1; }
 
-}
-body{
-    background-color:#f4f5f5;
-    min-height: 100vh;
-    padding-top: 20px;
-    margin: 0;
-}
-
-table {
-    width: 100%;
-    text-align: center;
-    border-spacing: 0;/**设置相邻单元格的边框间的距离**/
-    border-collapse: collapse;/**边框会合并为一个单一的边框**/
-    color:#5a5a5a;
-    table-layout: fixed;/**固定table表格**/
-}
-table  thead {
-    background-color: #d9edf7;
-}
-table td,table th{
-    border:1px solid #ccc;
-    overflow: hidden;/**溢出隐藏**/
-    white-space: nowrap;/**不换行**/
-    text-overflow: ellipsis;/**溢出不可见部分使用...代替**/
-}
-.article_content{
-    padding: 30px;
-    overflow-y: auto;
-}
-img{
+.article-content.markdown-body { max-width: none; padding: 48px 0 0; background: transparent; color: var(--text); font-size: 16px; line-height: 1.85; overflow-wrap: anywhere; }
+.article-content > :first-child { margin-top: 0 !important; }
+.article-content h1, .article-content h2, .article-content h3, .article-content h4, .article-content h5, .article-content h6 { scroll-margin-top: 30px; }
+.article-content.markdown-body h1, .article-content.markdown-body h2, .article-content.markdown-body h3, .article-content.markdown-body h4 { color: var(--text); line-height: 1.4; letter-spacing: -.035em; overflow-wrap: anywhere; }
+.article-content.markdown-body h1 { margin: 48px 0 18px; padding: 0; border: 0; font-size: 30px; font-weight: 750; }
+.article-content.markdown-body h2 { margin: 46px 0 16px; padding: 0; border: 0; font-size: 25px; font-weight: 700; }
+.article-content.markdown-body h3 { margin: 36px 0 13px; padding: 0; border: 0; font-size: 21px; font-weight: 700; }
+.article-content.markdown-body h4 { margin: 28px 0 11px; color: var(--text); font-size: 18px; font-weight: 650; }
+.article-content img {
+    display: block;
+    width: auto;
     max-width: 100%;
+    max-height: min(70vh, 620px);
+    height: auto;
+    margin: 28px auto;
+    padding: 4px;
+    border: 1px solid var(--border);
+    border-radius: 9px;
+    background: #fff;
+    box-shadow: 0 8px 28px rgba(38, 51, 67, .07);
+    object-fit: contain;
+    cursor: zoom-in;
 }
-.container {
-    max-width: 960px;
-    width: 50%;
-    margin-left: auto;
-    margin-right: auto;
-    background-color: white;
-    -webkit-box-shadow: 0 1px 3px rgba(26, 26, 26, .1);
-    box-shadow: 0 1px 3px rgba(26, 26, 26, .1);
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
+.article-content.markdown-body pre { margin: 26px 0; padding: 17px 20px; overflow-x: auto; border: 1px solid var(--border); border-radius: 9px; background: #f6f8fa; font-size: 13px; line-height: 1.65; tab-size: 4; box-shadow: 0 5px 18px rgba(38, 51, 67, .04); }
+.article-content.markdown-body pre code, .article-content.markdown-body pre code.hljs { display: block; padding: 0; background: transparent; color: inherit; font-size: inherit; line-height: inherit; overflow: visible; }
+.article-content.markdown-body :not(pre) > code { padding: .16em .38em; border-radius: 4px; background: #f0f4f8; color: #476794; font-size: .88em; }
+.code-block { margin: 26px 0; overflow: hidden; border: 1px solid var(--border); border-radius: 9px; background: #f6f8fa; box-shadow: 0 5px 18px rgba(38, 51, 67, .04); }
+.code-toolbar { display: flex; align-items: center; justify-content: space-between; min-height: 36px; padding: 5px 14px; border-bottom: 1px solid var(--border); color: var(--muted); font: 11px/1.4 -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+.code-language { text-transform: uppercase; letter-spacing: .08em; }
+.copy-code { padding: 4px 5px; border: 0; border-radius: 4px; background: transparent; color: var(--accent); font: inherit; cursor: pointer; }
+.copy-code:hover { background: #e9eff6; }
+.copy-code:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.article-content.markdown-body .code-block pre { margin: 0; padding: 16px 20px; border: 0; border-radius: 0; box-shadow: none; }
+.article-content table { display: block; width: 100%; overflow-x: auto; }
+.article-content a { color: var(--accent); }
+.article-content a:hover { text-decoration: underline; }
+.directory-page .article-content.markdown-body > p:first-child { margin: 0 0 32px; padding: 12px 15px; border-radius: 7px; background: #f5f7fa; color: var(--muted); font-size: 13px; line-height: 1.6; }
+.directory-page .article-content.markdown-body h2 { margin: 42px 0 10px; font-size: 20px; }
+.directory-page .article-content.markdown-body > p:first-child + h2 { margin-top: 0; }
+.directory-page .article-content.markdown-body table { display: table; width: 100%; margin: 0; border: 1px solid var(--border); border-collapse: separate; border-spacing: 0; border-radius: 8px; table-layout: fixed; overflow: hidden; }
+.directory-page .article-content.markdown-body table tr { background: transparent; border: 0; }
+.directory-page .article-content.markdown-body table th, .directory-page .article-content.markdown-body table td { padding: 16px 18px; border: 0; border-bottom: 1px solid var(--border); text-align: left; vertical-align: middle; }
+.directory-page .article-content.markdown-body table thead { background: #f6f8fa; }
+.directory-page .article-content.markdown-body table thead th { padding-top: 10px; padding-bottom: 10px; color: var(--muted); font-size: 12px; font-weight: 600; }
+.directory-page .article-content.markdown-body table thead th:first-child { width: 26%; }
+.directory-page .article-content.markdown-body table thead th:last-child { width: 12%; text-align: right; }
+.directory-page .article-content.markdown-body table tbody td { color: var(--muted); font-size: 13px; }
+.directory-page .article-content.markdown-body table tbody td:first-child { color: var(--text); font-size: 15px; }
+.directory-page .article-content.markdown-body table tbody td:last-child { color: var(--accent); font-size: 17px; text-align: right; }
+.directory-page .article-content.markdown-body table tbody tr:last-child td { border-bottom: 0; }
+.directory-page .article-layout { display: block; width: min(760px, calc(100% - 48px)); padding:75px 0 100px; }
+.directory-page .back-link, .directory-page .article-meta, .directory-page .article-end, .directory-page .toc-panel { display: none; }
+.directory-page .article-heading h1 { font-size: 40px; }
+.directory-page .article-content.markdown-body { padding-top: 34px; }
+.article-end { display: flex; align-items: center; justify-content: space-between; gap: 16px; margin-top: 55px; padding-top: 20px; border-top: 1px solid var(--border); color: #8b98a6; font-size: 12px; }
+.article-end a { color: var(--accent); }
+.article-end a:hover { text-decoration: underline; }
 
-}
-.markdown-body {
-    flex: 1;
-    padding: 20px;
-}
-.toc-container {
-    position: sticky;
-    top: 300px;
-    /*position: fixed; !* 或使用 position: fixed *!*/
-    /*top: 100px; !* 固定在距离顶部20px的位置 *!*/
-    /*right: 100px;*/
-    width: 20%;
-    max-height: 600px; /* 保持 TOC 在可视区域内 */
-    overflow-y: auto; /* 如果 TOC 超出高度，则滚动 */
-    margin-left: 20px; /* 与内容的间距 */
-    /*padding: 100px;*/
-    /*overflow: hidden;*/
-    overscroll-behavior: contain;
+.toc-panel { position: sticky; top: 28px; align-self: start; max-height: calc(100vh - 56px); overflow-y: auto; overscroll-behavior: contain; padding-top: 49px; }
+.toc-title { margin: 0 0 14px; color: var(--text); font-size: 12px; font-weight: 700; }
+.toc-links { position: relative; display: flex; flex-direction: column; border-left: 1px solid var(--border); }
+.toc-links::before { content: ""; position: absolute; z-index: 1; top: 0; left: -1px; width: 2px; height: var(--indicator-height, 0px); border-radius: 2px; background: var(--accent); opacity: 0; transform: translateY(var(--indicator-y, 0px)); transition: transform var(--indicator-duration, .46s) cubic-bezier(.42, 0, .58, 1), height var(--indicator-duration, .46s) cubic-bezier(.42, 0, .58, 1), opacity .18s ease; pointer-events: none; }
+.toc-links.has-active::before { opacity: 1; }
+.toc-links a { display: block; padding: 7px 6px 7px 12px; border-radius: 0 6px 6px 0; color: var(--muted); font-size: 12px; line-height: 1.5; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; transition: color .22s ease, background-color .22s ease; }
+.toc-links a:hover, .toc-links a.active { color: var(--accent); }
+.toc-links a:hover { background: #f6f8fb; }
+.toc-links a.active { background: #e1ebf9; color: #3f6297; }
+.toc-links .toc-level-1, .toc-links .toc-level-2 { padding-left: 12px; font-weight: 600; }
+.toc-links .toc-level-3 { padding-left: 25px; }
+.toc-links .toc-level-4 { padding-left: 34px; }
+.toc-links .toc-level-5 { padding-left: 43px; }
+.toc-links .toc-level-6 { padding-left: 52px; }
+.back-to-top { position: fixed; right: 28px; bottom: 26px; width: 38px; height: 38px; border: 1px solid var(--border); border-radius: 50%; background: #fff; color: var(--accent); cursor: pointer; font-size: 18px; }
+.back-to-top:hover { border-color: var(--accent); }
+.back-to-top[hidden], .toc-panel[hidden] { display: none; }
+@media (prefers-reduced-motion: reduce) { .toc-links::before, .toc-links a { transition: none; } }
 
-
-}
-.toc{
-    max-width: 300px;    background-color: #ffffff;
-    /*margin-left: 100px;*/
-    border-radius: 8px;
-    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
-}
-.article{
-    display: flex;flex-direction: column;
-}
-.articlet{
-    /*margin-left: 25%;*/
-    display: flex;
-    /*flex-direction: column;*/
-    /*width: 50%;*/
-}
-.at_left{
-    width: 25%;
-}
-.at_center{
-    width: 50%;
-    max-width: 960px;
-    /* margin: auto; */
-    margin-left: auto;
-    margin-right: auto;
-}
-.at_right{
-    width: 25%;
-}
-.article_title h1{
-    margin: 0;
-    padding-bottom: 20px;
-}
-.article_info{
-    display: flex;
-    flex-direction: row;
-    padding-bottom: 20px;
-}
-.article_info div{
-    padding-right: 20px;
-}
-.articlec{
-    display: flex;
+@media (max-width: 900px) {
+    .article-layout { display: block; max-width: 720px; }
+    .toc-panel { display: none; }
 }
 
-.article_left_content{
-    width: 25%;
-}
-.article_foot{
-    min-height: 100vh;
-}
-.toc ul {
-     list-style: none;
-     padding: 0;
- }
-
-.toc li {
-    padding-left: auto; /* 缩进 */
-    display: block; /* 设置为块级元素 */
-    width: 100%; /* 确保 li 宽度和 toc 宽度一致 */
-    box-sizing: border-box; /* padding 不增加元素实际宽度 */
-}
-
-.toc a {
-    text-decoration: none;
-    color: #000; /* 文字颜色始终为黑色 */
-    display: block;
-    margin: 5px 0;
-    padding: 5px 20px; /* 填充整个宽度 */
-    border-radius: 5px;
-    transition: background-color 0.3s;
-
-    overscroll-behavior: contain;
-
-}
-
-.toc a:hover {
-    background-color: #f0f0f0; /* 鼠标悬停时背景颜色 */
-}
-
-.toc a.active {
-    background-color: #d2ecaa; /* 点击后背景颜色 */
-}
-.toc {
-    max-width: 400px; /* 设置 TOC 的宽度 */
-    border: 1px solid #ccc; /* 可选：添加边框样式 */
-    padding: 10px; /* 可选：添加整体内边距 */
-}
-
-.toc-item {
-    text-align: left; /* 文本左对齐 */
-    white-space: nowrap; /* 不换行 */
-    overflow: hidden; /* 溢出隐藏 */
-    text-overflow: ellipsis; /* 溢出部分显示省略号 */
-    margin-bottom: 5px; /* 可选：调整项目间距 */
-
-    display: block;
-
-    background-clip: padding-box; /* 设置背景仅在 padding 区域内绘制 */
-}
-h2{
-    align-items: center;
-}
-.gotop{
- min-width: 5%;
-}
-.rocket{
-    position: sticky;
-    /* position: relative; */
-    top: 75%;
-    left: 200px;
-    transform: rotate(-45deg);
-    /*background-image: "../assets/img/rocket.png";*/
+@media (max-width: 580px) {
+    .article-layout { width: min(100% - 36px, 720px); padding: 33px 0 75px; }
+    .back-link { margin-bottom: 30px; }
+    .article-heading h1 { font-size: 30px; }
+    .article-meta { gap: 6px 10px; }
+    .article-meta span + span::before { margin-right: 10px; }
+    .article-content.markdown-body { padding-top: 36px; font-size: 15px; }
+    .article-content.markdown-body h1 { font-size: 26px; }
+    .article-content.markdown-body h2 { font-size: 22px; }
+    .article-content.markdown-body h3 { font-size: 19px; }
+    .article-content.markdown-body h4 { font-size: 17px; }
+    .article-content.markdown-body pre, .article-content.markdown-body .code-block pre { padding: 15px 16px; font-size: 12px; }
+    .directory-page .article-content.markdown-body table, .directory-page .article-content.markdown-body table tbody, .directory-page .article-content.markdown-body table tr, .directory-page .article-content.markdown-body table tbody td { display: block; width: 100%; }
+    .directory-page .article-content.markdown-body table thead { display: none; }
+    .directory-page .article-content.markdown-body table tbody tr { position: relative; padding: 14px 42px 14px 16px; border-bottom: 1px solid var(--border); }
+    .directory-page .article-content.markdown-body table tbody tr:last-child { border-bottom: 0; }
+    .directory-page .article-content.markdown-body table tbody td { padding: 0; border: 0; }
+    .directory-page .article-content.markdown-body table tbody td:nth-child(2) { margin-top: 4px; }
+    .directory-page .article-content.markdown-body table tbody td:last-child { position: absolute; top: 50%; right: 16px; width: auto; transform: translateY(-50%); }
+    .directory-page .article-layout { width: min(100% - 36px, 760px); padding: 54px 0 75px; }
+    .directory-page .article-heading h1 { font-size: 34px; }
+    .directory-page .article-content.markdown-body { padding-top: 28px; }
+    .back-to-top { right: 16px; bottom: 16px; }
 }

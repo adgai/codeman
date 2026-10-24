@@ -5,12 +5,22 @@ const isDebug = args.includes('--debug'); // 检查是否包含 --debug 参数
 
 const fs = require('fs-extra');
 const path = require('path');
+const crypto = require('crypto');
 const { marked } = require('marked');
 const { JSDOM } = require('jsdom');
 const matter = require('gray-matter');
-const {addDays, format}  =  require ("date-fns");
 const chokidar = require('chokidar');
 const { gfmHeadingId } =  require ("marked-gfm-heading-id");
+
+// Front matter 中的时间没有时区，直接按写入的年月日展示。
+function formatPostDate(date, includeTime = false) {
+    const pad = value => String(value).padStart(2, '0');
+    const year = date.getUTCFullYear();
+    const month = pad(date.getUTCMonth() + 1);
+    const day = pad(date.getUTCDate());
+    if (!includeTime) return `${year}/${month}/${day}`;
+    return `${year}年${month}月${day}日 ${pad(date.getUTCHours())}:${pad(date.getUTCMinutes())}`;
+}
 
 // 确保目录存在
 function ensureDirectoryExistence(directory) {
@@ -19,9 +29,24 @@ function ensureDirectoryExistence(directory) {
     }
 }
 
+function getPngDimensions(filePath) {
+    if (!fs.existsSync(filePath)) return null;
+    const header = Buffer.alloc(24);
+    const file = fs.openSync(filePath, 'r');
+    try {
+        if (fs.readSync(file, header, 0, header.length, 0) !== header.length) return null;
+        if (header.toString('hex', 0, 8) !== '89504e470d0a1a0a' || header.toString('ascii', 12, 16) !== 'IHDR') return null;
+        return { width: header.readUInt32BE(16), height: header.readUInt32BE(20) };
+    } finally {
+        fs.closeSync(file);
+    }
+}
+
 // 读取posts文件夹中的Markdown文件，并转换为HTML文件
 function convertMarkdownToHtml(directory, outputDirectory,dt) {
     const files = fs.readdirSync(directory);
+    const articleCss = fs.readFileSync(path.join(__dirname, '../posts/static/article.css'));
+    const articleCssVersion = crypto.createHash('sha1').update(articleCss).digest('hex').slice(0, 8);
 
     const options = {
         headerIds: true, // 启用 headerIds 选项
@@ -33,7 +58,13 @@ function convertMarkdownToHtml(directory, outputDirectory,dt) {
 // 重写 image 方法，为 img 标签添加 class
     renderer.image = function(href, title, text) {
         const className = 'data-zoomable'; // 你想添加的 class
-        let out = '<img class="' + className + '" src="' + href.href + '" alt="' +  href.text + '"';
+        let out = '<img class="' + className + '" src="' + href.href + '" alt="' +  href.text + '" loading="lazy" decoding="async"';
+        const dimensions = getPngDimensions(path.resolve(directory, href.href));
+        if (dimensions) {
+            const previewWidth = Math.min(dimensions.width, Math.round(dimensions.width * 620 / dimensions.height));
+            out += ' width="' + dimensions.width + '" height="' + dimensions.height + '"';
+            out += ' style="width:min(100%,' + previewWidth + 'px);aspect-ratio:' + dimensions.width + '/' + dimensions.height + '"';
+        }
         if (title) {
             out += ' title="' + title + '"';
         }
@@ -62,7 +93,14 @@ function convertMarkdownToHtml(directory, outputDirectory,dt) {
             // 重写 image 方法，为 img 标签添加 class
 
 
-            const html = marked(content,options);
+            const rendered = new JSDOM('<body>' + marked(content, options) + '</body>');
+            rendered.window.document.querySelectorAll('h1, h2, h3, h4').forEach((heading, index) => {
+                heading.id = 'section-' + (index + 1);
+            });
+            rendered.window.document.querySelectorAll('h5, h6').forEach((heading, index) => {
+                heading.id = 'section-deep-' + (index + 1);
+            });
+            const html = rendered.window.document.body.innerHTML;
             // 读取 static/article.html
             const templatePath = path.join(__dirname, '../posts/static/article.html');
             let templateHtml = fs.readFileSync(templatePath, 'utf8');
@@ -70,11 +108,13 @@ function convertMarkdownToHtml(directory, outputDirectory,dt) {
             const htmlFileName = basename + '.html';
 
             const outputHtml = templateHtml.replace('<!-- CONTENT -->', html)
+                .replace('./static/article.css', `./static/article.css?v=${articleCssVersion}`)
                 .replace('<!-- AUTHOR -->', data.author)
                 .replace('<!-- TITLE -->', data.title)
                 .replace('<!-- TITLE -->', data.title)
-                .replace('<!-- TIME -->', format(data.date, 'yyyy年MM月dd日 HH:mm'))
+                .replace('<!-- TIME -->', formatPostDate(data.date, true))
                 .replace('<!-- LOCATION -->', data.location)
+                .replace('<body>', data.layout === 'directory' ? '<body class="directory-page">' : '<body>')
 
             ;
 
@@ -97,7 +137,7 @@ function generateNewIndexHtml(directory, originalIndexFilePath, outputIndexFileP
 
         // 过滤和排序HTML文件，排除index.html，并根据日期倒序排序
         const sortedFiles = files
-            .filter(file => path.extname(file) === '.html' && file !== 'index.html')
+            .filter(file => path.extname(file) === '.html' && file !== 'index.html' && dt.get(path.basename(file, '.html'))?.showOnHome !== false)
             .sort((a, b) => {
                 const aDate = dt.get(path.basename(a, '.html'))?.date || new Date();
                 const bDate = dt.get(path.basename(b, '.html'))?.date || new Date();
@@ -111,15 +151,14 @@ function generateNewIndexHtml(directory, originalIndexFilePath, outputIndexFileP
             const li = document.createElement('li');
             const a = document.createElement('a');
             a.href = file;
-            a.textContent = path.basename(file, '.html');
-            li.appendChild(a);
-
-            let basename = path.basename(file, '.html');
+            const basename = path.basename(file, '.html');
+            a.textContent = dt.get(basename)?.title || basename;
             let newVar = dt.get(basename);
             let date = newVar === undefined ? new Date() : newVar.date;
             let htmlSpanElement = document.createElement('span');
-            htmlSpanElement.textContent = format(date, 'yyyy/MM/dd');
+            htmlSpanElement.textContent = formatPostDate(date);
             li.appendChild(htmlSpanElement);
+            li.appendChild(a);
             ul.appendChild(li);
         });
 
