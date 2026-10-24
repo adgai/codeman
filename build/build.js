@@ -44,16 +44,10 @@ function renderBrand(template, siteConfig) {
 
 function parseHomeMarkdown(markdown) {
     const document = new JSDOM(`<body>${marked.parse(markdown)}</body>`).window.document;
-    const elements = [...document.body.children];
-    const postsIndex = elements.findIndex(element => element.tagName === 'H2');
-    if (elements[0]?.tagName !== 'H1' || postsIndex < 2 || postsIndex !== elements.length - 1) {
+    if (document.body.firstElementChild?.tagName !== 'H1' || document.body.lastElementChild?.tagName !== 'H2') {
         throw new Error('pages/home.md needs a level-one title and a final level-two recent-articles heading');
     }
-
-    return {
-        postsTitle: elements[postsIndex].textContent.trim(),
-        heroHtml: elements.slice(0, postsIndex).map(element => element.outerHTML).join('\n'),
-    };
+    return document.body.innerHTML;
 }
 
 // 确保目录存在
@@ -157,21 +151,19 @@ function convertMarkdownToHtml(directory, outputDirectory, articleEntries, conte
 }
 
 // 在内存中生成新的index.html
-function generateNewIndexHtml(originalIndexFilePath, outputIndexFilePath, articleEntries, siteConfig) {
+function generateNewIndexHtml(originalIndexFilePath, homeHtml, outputIndexFilePath, articleEntries, siteConfig) {
     // 读取原始的index.html文件内容
     const indexHtml = renderBrand(fs.readFileSync(originalIndexFilePath, 'utf-8'), siteConfig)
         .replace('<!-- SITE_NAV -->', renderSiteNav(siteConfig.nav, 'index.html'));
     const dom = new JSDOM(indexHtml);
     const document = dom.window.document;
-    const hero = document.querySelector('.hero');
-    hero.innerHTML = siteConfig.heroHtml;
-    const heroTitle = hero.querySelector('h1');
-    if (!heroTitle) throw new Error('pages/home.md must contain a level-one heading');
-    heroTitle.id = 'hero-title';
-    const heroDescription = hero.querySelector('p');
-    if (heroDescription) heroDescription.classList.add('hero-description');
-    document.title = `${siteConfig.brandName + siteConfig.brandSuffix} · ${heroTitle.textContent}`;
-    document.getElementById('posts-title').textContent = siteConfig.postsTitle;
+    const homeContent = document.getElementById('home-content');
+    homeContent.innerHTML = homeHtml;
+    const homeTitle = homeContent.firstElementChild;
+    homeTitle.id = 'home-title';
+    const postsHeading = homeContent.lastElementChild;
+    postsHeading.id = 'posts-title';
+    document.title = `${siteConfig.brandName + siteConfig.brandSuffix} · ${homeTitle.textContent}`;
 
     const sortedArticles = [...articleEntries].sort((a, b) => b.date - a.date);
 
@@ -190,10 +182,12 @@ function generateNewIndexHtml(originalIndexFilePath, outputIndexFilePath, articl
         ul.appendChild(li);
     });
 
-    // 将<ul>添加到<div id="article">中
-    const articleElement = document.getElementById('article');
-    articleElement.innerHTML = ''; // 清空之前的内容
+    // 将文章列表接到 Markdown 的最后一个二级标题后。
+    const articleElement = document.createElement('div');
+    articleElement.id = 'article';
+    articleElement.className = 'article-list';
     articleElement.appendChild(ul);
+    postsHeading.after(articleElement);
 
     // 将修改后的DOM序列化并写入新的index.html文件
     fs.writeFileSync(outputIndexFilePath, dom.serialize(), 'utf-8');
@@ -227,8 +221,8 @@ function build() {
     const outputIndexFilePath = path.join(diskDirectory, 'index.html');
     const siteConfigPath = path.join(__dirname, '../site.config.js');
     delete require.cache[require.resolve(siteConfigPath)];
-    const home = parseHomeMarkdown(fs.readFileSync(homeMarkdownFilePath, 'utf-8'));
-    const siteConfig = { ...require(siteConfigPath), ...home };
+    const homeHtml = parseHomeMarkdown(fs.readFileSync(homeMarkdownFilePath, 'utf-8'));
+    const siteConfig = require(siteConfigPath);
     const articleCss = fs.readFileSync(path.join(postsDirectory, 'static/article.css'));
     const articleCssVersion = crypto.createHash('sha1').update(articleCss).digest('hex').slice(0, 8);
     const articleEntries = [];
@@ -244,7 +238,7 @@ function build() {
     convertMarkdownToHtml(pagesDirectory, diskDirectory, articleEntries, 'page', siteConfig, articleCssVersion);
 
     // 在内存中生成新的index.html并写入到disk目录
-    generateNewIndexHtml(originalIndexFilePath, outputIndexFilePath, articleEntries, siteConfig);
+    generateNewIndexHtml(originalIndexFilePath, homeHtml, outputIndexFilePath, articleEntries, siteConfig);
 
     // 复制assets文件夹
     copyAssetsDirectory(postsDirectory, diskDirectory,'assets');
