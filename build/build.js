@@ -107,7 +107,7 @@ function convertMarkdownToHtml(directory, outputDirectory,dt) {
             // generateI(html)
             const htmlFileName = basename + '.html';
 
-            const outputHtml = templateHtml.replace('<!-- CONTENT -->', html)
+            let outputHtml = templateHtml.replace('<!-- CONTENT -->', html)
                 .replace('./static/article.css', `./static/article.css?v=${articleCssVersion}`)
                 .replace('<!-- AUTHOR -->', data.author)
                 .replace('<!-- TITLE -->', data.title)
@@ -117,6 +117,10 @@ function convertMarkdownToHtml(directory, outputDirectory,dt) {
                 .replace('<body>', data.layout === 'directory' ? '<body class="directory-page">' : '<body>')
 
             ;
+
+            if (data.layout === 'directory') {
+                outputHtml = outputHtml.replaceAll('返回文章列表', '返回首页').replace('全文完', '工具清单');
+            }
 
             fs.writeFileSync(path.join(outputDirectory, htmlFileName), outputHtml, 'utf-8');
         }
