@@ -85,6 +85,7 @@ function convertMarkdownToHtml(directory, outputDirectory, articleEntries, conte
 
     files.forEach(file => {
         if (path.extname(file) === '.md') {
+            if (contentType === 'page' && file === 'home.md') return;
             const markdown = fs.readFileSync(path.join(directory, file), 'utf-8');
             const { content, data } = matter(markdown); // 解析 Markdown 文件
             if (data.draft !== undefined && data.draft) {
@@ -135,41 +136,46 @@ function convertMarkdownToHtml(directory, outputDirectory, articleEntries, conte
 }
 
 // 在内存中生成新的index.html
-function generateNewIndexHtml(originalIndexFilePath, outputIndexFilePath, articleEntries, siteConfig) {
-    try {
-        // 读取原始的index.html文件内容
-        const indexHtml = fs.readFileSync(originalIndexFilePath, 'utf-8')
-            .replace('<!-- SITE_NAV -->', renderSiteNav(siteConfig.nav, 'index.html'));
-        const dom = new JSDOM(indexHtml);
-        const document = dom.window.document;
+function generateNewIndexHtml(originalIndexFilePath, homeMarkdownFilePath, outputIndexFilePath, articleEntries, siteConfig) {
+    // 读取原始的index.html文件内容
+    const indexHtml = fs.readFileSync(originalIndexFilePath, 'utf-8')
+        .replace('<!-- SITE_NAV -->', renderSiteNav(siteConfig.nav, 'index.html'));
+    const dom = new JSDOM(indexHtml);
+    const document = dom.window.document;
+    const { content } = matter(fs.readFileSync(homeMarkdownFilePath, 'utf-8'));
+    const hero = document.querySelector('.hero');
+    hero.innerHTML = marked.parse(content);
+    const heroTitle = hero.querySelector('h1');
+    if (!heroTitle) throw new Error('pages/home.md must contain a level-one heading');
+    heroTitle.id = 'hero-title';
+    const heroDescription = hero.querySelector('p');
+    if (heroDescription) heroDescription.classList.add('hero-description');
+    document.title = `codeman.im · ${heroTitle.textContent}`;
 
-        const sortedArticles = [...articleEntries].sort((a, b) => b.date - a.date);
+    const sortedArticles = [...articleEntries].sort((a, b) => b.date - a.date);
 
-        const ul = document.createElement('ul');
+    const ul = document.createElement('ul');
 
-        // 生成排序后的HTML文件列表
-        sortedArticles.forEach(({ file, title, date }) => {
-            const li = document.createElement('li');
-            const a = document.createElement('a');
-            a.href = file;
-            a.textContent = title;
-            const dateLabel = document.createElement('span');
-            dateLabel.textContent = formatPostDate(date);
-            li.appendChild(dateLabel);
-            li.appendChild(a);
-            ul.appendChild(li);
-        });
+    // 生成排序后的HTML文件列表
+    sortedArticles.forEach(({ file, title, date }) => {
+        const li = document.createElement('li');
+        const a = document.createElement('a');
+        a.href = file;
+        a.textContent = title;
+        const dateLabel = document.createElement('span');
+        dateLabel.textContent = formatPostDate(date);
+        li.appendChild(dateLabel);
+        li.appendChild(a);
+        ul.appendChild(li);
+    });
 
-        // 将<ul>添加到<div id="article">中
-        const articleElement = document.getElementById('article');
-        articleElement.innerHTML = ''; // 清空之前的内容
-        articleElement.appendChild(ul);
+    // 将<ul>添加到<div id="article">中
+    const articleElement = document.getElementById('article');
+    articleElement.innerHTML = ''; // 清空之前的内容
+    articleElement.appendChild(ul);
 
-        // 将修改后的DOM序列化并写入新的index.html文件
-        fs.writeFileSync(outputIndexFilePath, dom.serialize(), 'utf-8');
-    } catch (error) {
-        console.error('Error generating index.html:', error);
-    }
+    // 将修改后的DOM序列化并写入新的index.html文件
+    fs.writeFileSync(outputIndexFilePath, dom.serialize(), 'utf-8');
 }
 
 // 复制assets文件夹
@@ -196,6 +202,7 @@ function build() {
     const pagesDirectory = path.join(__dirname, '../pages');
     const diskDirectory = path.join(__dirname, '../disk');
     const originalIndexFilePath = path.join(__dirname, '../index.html');
+    const homeMarkdownFilePath = path.join(pagesDirectory, 'home.md');
     const outputIndexFilePath = path.join(diskDirectory, 'index.html');
     const siteConfigPath = path.join(__dirname, '../site.config.js');
     delete require.cache[require.resolve(siteConfigPath)];
@@ -215,7 +222,7 @@ function build() {
     convertMarkdownToHtml(pagesDirectory, diskDirectory, articleEntries, 'page', siteConfig, articleCssVersion);
 
     // 在内存中生成新的index.html并写入到disk目录
-    generateNewIndexHtml(originalIndexFilePath, outputIndexFilePath, articleEntries, siteConfig);
+    generateNewIndexHtml(originalIndexFilePath, homeMarkdownFilePath, outputIndexFilePath, articleEntries, siteConfig);
 
     // 复制assets文件夹
     copyAssetsDirectory(postsDirectory, diskDirectory,'assets');

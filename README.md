@@ -13,6 +13,7 @@ npm run build
 
 - 将文章放在 `posts/`。它会生成同名 HTML，并按日期倒序出现在首页的文章列表中。
 - 将固定页面放在 `pages/`。它也会生成同名 HTML，但不会进入文章列表。要将页面加入顶部导航，在 `site.config.js` 的 `nav` 中添加链接。
+- 首页主文案写在 `pages/home.md`：一级标题是首页标题，第一段是副标题。它会填入首页模板，不会单独生成 `home.html`。最近文章仍从 `posts/` 自动生成。
 - 导航链接使用生成后的文件名，例如 `tools.md` 对应 `tools.html`。移动 Markdown 源文件不会改变页面 URL。
 - 页面和文章共用 `posts/static/article.html`；首页使用根目录的 `index.html`。导航由 `site.config.js` 统一生成。
 
