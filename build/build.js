@@ -45,36 +45,14 @@ function renderBrand(template, siteConfig) {
 function parseHomeMarkdown(markdown) {
     const document = new JSDOM(`<body>${marked.parse(markdown)}</body>`).window.document;
     const elements = [...document.body.children];
-    const brandLink = elements[0]?.querySelector('a');
-    const brandText = brandLink?.textContent.trim();
-    const dotIndex = brandText?.lastIndexOf('.') ?? -1;
-    const navIndex = elements.findIndex(element => element.tagName === 'H2');
-    const navList = elements[navIndex + 1];
-    const postsHeading = elements[navIndex + 2];
-
-    if (elements[0]?.tagName !== 'P' || !brandLink || brandLink.getAttribute('href') !== 'index.html' ||
-        elements[0].textContent.trim() !== brandText || dotIndex < 1 || dotIndex === brandText.length - 1 ||
-        elements[1]?.tagName !== 'H1' || navIndex < 3 ||
-        navList?.tagName !== 'UL' || postsHeading?.tagName !== 'H2' ||
-        elements.length !== navIndex + 3) {
-        throw new Error('pages/home.md needs a brand link, a level-one title, a navigation list, and a recent-articles heading');
+    const postsIndex = elements.findIndex(element => element.tagName === 'H2');
+    if (elements[0]?.tagName !== 'H1' || postsIndex < 2 || postsIndex !== elements.length - 1) {
+        throw new Error('pages/home.md needs a level-one title and a final level-two recent-articles heading');
     }
 
-    const nav = [...navList.children].map(item => {
-        const link = item.querySelector('a');
-        if (item.tagName !== 'LI' || !link || !link.textContent.trim() || !link.getAttribute('href')) {
-            throw new Error('Each navigation item in pages/home.md must be a Markdown link');
-        }
-        return { label: link.textContent.trim(), href: link.getAttribute('href') };
-    });
-    if (!nav.length) throw new Error('pages/home.md must contain at least one navigation link');
-
     return {
-        brandName: brandText.slice(0, dotIndex),
-        brandSuffix: brandText.slice(dotIndex),
-        nav,
-        postsTitle: postsHeading.textContent.trim(),
-        heroHtml: elements.slice(1, navIndex).map(element => element.outerHTML).join('\n'),
+        postsTitle: elements[postsIndex].textContent.trim(),
+        heroHtml: elements.slice(0, postsIndex).map(element => element.outerHTML).join('\n'),
     };
 }
 
