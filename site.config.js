@@ -1,15 +1,18 @@
 module.exports = {
     brandName: 'codeman',
     brandSuffix: '.im',
-    nav: [
-        { label: '文章', href: 'index.html' },
-        { label: '随想', href: 'thoughts.html' },
-        { label: '项目', href: 'myproject.html' },
-        { label: '工具', href: 'tools.html' },
-        { label: '关于我', href: 'aboutme.html' },
-    ],
-    backLabels: {
-        page: '返回首页',
-        post: '返回文章列表',
+    defaultLayout: 'article',
+    layouts: {
+        article: { renderer: 'markdown' },
+        directory: { renderer: 'markdown', bodyClass: 'directory-page' },
+        typewriter: { renderer: 'typewriter', bodyClass: 'feeling-page', script: 'static/typewriter.js' },
     },
+    folders: [
+        { name: 'posts', label: '文章' },
+        { name: 'thoughts', label: '年少常有所感', layout: 'typewriter' },
+        { name: 'projects', label: '项目' },
+        { name: 'tools', label: '工具' },
+        { name: 'about', label: '关于我' },
+    ],
+    fileLayouts: {},
 };

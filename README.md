@@ -11,10 +11,28 @@ npm run build
 
 ## 添加内容
 
-- 将文章放在 `posts/`。它会生成同名 HTML，并按日期倒序出现在首页的文章列表中。
-- 将固定页面放在 `pages/`。它也会生成同名 HTML，但不会进入文章列表。要将页面加入顶部导航，在 `site.config.js` 中添加链接。
-- 首页正文写在纯 Markdown 的 `pages/home.md`，直接渲染到首页；最后一个二级标题下方会自动接上 `posts/` 中的最近文章。它不会单独生成 `home.html`。
-- 导航链接使用生成后的文件名，例如 `tools.md` 对应 `tools.html`。移动 Markdown 源文件不会改变页面 URL。
-- 页面和文章共用 `posts/static/article.html`；首页使用根目录的 `index.html`。站点品牌和顶部导航由 `site.config.js` 统一管理。
+- 首页正文写在 `pages/home.md`。它最后的二级标题下会自动列出 `pages/` 中的内容文件夹和独立 Markdown 文件。
+- 直接放在 `pages/` 下的 Markdown 文件会作为文件链接出现在首页，点击后打开正文；`home.md` 只用于生成首页，不会出现在列表中。
+- 文件夹里直接放 Markdown 文件，不需要 `_index.md`。点开文件夹会列出其中的文件，再点文件查看正文；草稿文件（`draft: true`）不会显示。
+- 例如文章放在 `pages/posts/`，项目内容放在 `pages/projects/`。有 Markdown 文件的新增文件夹会自动出现在首页，目录地址是 `文件夹名/`。已知文件夹的中文名称和顺序在 `site.config.js` 中设置。
+- 单篇 Markdown 仍生成根目录下的同名 HTML，保留现有文章链接。例如 `pages/myproject.md` 仍生成 `myproject.html`。
+- 页面共用 `pages/posts/static/article.html`；首页和文件夹页使用根目录的 `index.html`。`site.config.js` 保留站点品牌配置。
 
-Markdown 文件使用 front matter 设置 `title`、`date`、`author` 和 `location`。可选的 `draft: true` 会跳过构建；`layout: directory` 为表格目录启用额外样式；`endLabel` 可自定义页尾文字。图片放在 `posts/assets/` 或 `pages/assets/`，并在 Markdown 中使用 `./assets/文件名` 引用。
+单篇 Markdown 使用 front matter 设置 `title`、`date`、`author` 和 `location`。可选的 `draft: true` 会跳过构建；`layout: directory` 为表格目录启用额外样式；`endLabel` 可自定义页尾文字。图片放在内容目录的 `assets/` 中，并在 Markdown 中使用 `assets/文件名` 引用；构建时会复制到输出目录的 `assets/`。
+
+## 页面渲染方式
+
+`site.config.js` 的 `defaultLayout` 设置默认方式，`folders[].layout` 设置文件夹内文件的默认方式，`fileLayouts` 可以按相对 `pages/` 的文件路径单独指定。Markdown 的 front matter 也可以写 `layout`，优先级最高。例如：
+
+```js
+defaultLayout: 'article',
+folders: [
+  { name: 'posts', label: '文章' },
+  { name: 'thoughts', label: '年少常有所感', layout: 'typewriter' },
+],
+fileLayouts: {
+  'thoughts/AI前夜.md': 'article',
+},
+```
+
+上例中 `thoughts` 下默认是打字机效果，但 `AI前夜.md` 使用普通文章样式。如果只想在该文件内指定，也可以在 front matter 写 `layout: article`。当前可选方式为 `article`（普通 Markdown）、`directory`（普通 Markdown 加表格目录样式）和 `typewriter`（按 Markdown 源文件逐行打字，空行保留为间隔）。方式的渲染器、页面 class 和脚本集中定义在 `site.config.js` 的 `layouts` 中；新增一种渲染器时才需要修改 `build/build.js`。修改配置或 Markdown 后运行 `npm run build`；开发时运行 `npm run build-debug` 可自动重建。

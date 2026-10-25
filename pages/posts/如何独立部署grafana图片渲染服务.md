@@ -163,7 +163,7 @@ http://localhost:3000/
 在WSL中clone 并构建代码
 
 需要注意的是 goland 配置goroot 是wsl中的go
-![](./assets/如何独立部署grafana图片渲染服务-1721559641950.png)
+![](assets/如何独立部署grafana图片渲染服务-1721559641950.png)
 
 **同时安装go 的时候最好使用 下载解压配置环境变量的方式**
 
@@ -174,17 +174,17 @@ http://localhost:3000/
 ```json
 HttpServer.render
 ```
-![](./assets/如何独立部署grafana图片渲染服务-1721558859070.png)
+![](assets/如何独立部署grafana图片渲染服务-1721558859070.png)
 
 可以看到 是从请求参数中 获取 renderKey
 
 在这里打印一下参数 
 
-![](./assets/如何独立部署grafana图片渲染服务-1721558909967.png)
+![](assets/如何独立部署grafana图片渲染服务-1721558909967.png)
 
 就可以看到renderKey是什么？
 
-![](./assets/如何独立部署grafana图片渲染服务-1721560775911.png)
+![](assets/如何独立部署grafana图片渲染服务-1721560775911.png)
 
 然后使用renderKey 直接请求render 
 ```json
@@ -227,7 +227,7 @@ curl --location --request GET '127.0.0.1:8081/render?url=http://localhost:3000/d
 可以直接返回渲染的panel的图片
 
 
-![](./assets/如何独立部署grafana图片渲染服务-1721561398229.png)
+![](assets/如何独立部署grafana图片渲染服务-1721561398229.png)
 
 ### 4.8. 4.7中描述的方式可以达到目的，但是需要修改grafana的代码 （需要看最终方法跳过这个 直接看4.9）
 那么有没有更好的方式？ 有！！！
@@ -272,7 +272,7 @@ curl --location --request GET
 --header 'User-Agent: Apifox/1.0.0 (https://apifox.com)'
 ```
 
-![](./assets/如何独立部署grafana图片渲染服务-1721566099553.png)
+![](assets/如何独立部署grafana图片渲染服务-1721566099553.png)
 
 ### 4.9 终极简单方案
 
@@ -283,17 +283,17 @@ curl --location --request GET
 按下面步骤获取到token  
 
 
-![](./assets/如何独立部署grafana图片渲染服务-1721738917271.png)
+![](assets/如何独立部署grafana图片渲染服务-1721738917271.png)
 
-![](./assets/如何独立部署grafana图片渲染服务-1721740624096.png)
-
-
-![](./assets/如何独立部署grafana图片渲染服务-1721738995671.png)
-
-![](./assets/如何独立部署grafana图片渲染服务-1721739016871.png)
+![](assets/如何独立部署grafana图片渲染服务-1721740624096.png)
 
 
-![](./assets/如何独立部署grafana图片渲染服务-1721739036979.png)
+![](assets/如何独立部署grafana图片渲染服务-1721738995671.png)
+
+![](assets/如何独立部署grafana图片渲染服务-1721739016871.png)
+
+
+![](assets/如何独立部署grafana图片渲染服务-1721739036979.png)
 
 #### 4.9.2 如何传递token
 
@@ -334,6 +334,6 @@ curl --location --request GET '127.0.0.1:8081/render?url=http://localhost:3000/d
 ```
 
 
-![](./assets/如何独立部署grafana图片渲染服务-1721739661564.png)
+![](assets/如何独立部署grafana图片渲染服务-1721739661564.png)
 
 完结撒花

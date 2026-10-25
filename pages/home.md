@@ -1,5 +1,3 @@
-# 代码改变生活
+# codeman.im
 
-code power
-
-## 最近文章
+## 目录

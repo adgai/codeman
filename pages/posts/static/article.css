@@ -4,7 +4,7 @@
     gap: 56px;
     width: min(1050px, calc(100% - 48px));
     margin: 0 auto;
-    padding: 52px 0 100px;
+    padding: 96px 0 100px;
 }
 .article-main { min-width: 0; }
 .back-link { display: inline-flex; gap: 8px; align-items: center; margin-bottom: 36px; color: var(--accent); font-size: 13px; }
@@ -36,6 +36,9 @@
     object-fit: contain;
     cursor: zoom-in;
 }
+.article-content .about-hero { position: relative; margin: 28px 0; overflow: hidden; border: 4px solid #fff; border-radius: 9px; background: #111; box-shadow: 0 8px 28px rgba(38, 51, 67, .12); }
+.article-content .about-hero img { display: block; width: 100%; max-height: none; margin: 0; padding: 0; border: 0; border-radius: 0; box-shadow: none; cursor: default; }
+.article-content .about-hero figcaption { position: absolute; right: 12px; bottom: 7%; left: 12px; margin: 0; color: #fff; font-family: Arial, Helvetica, sans-serif; font-size: clamp(16px, 2.4vw, 22px); font-weight: 500; letter-spacing: .02em; line-height: 1.2; text-align: center; -webkit-text-stroke: .35px rgba(0, 0, 0, .8); text-shadow: 0 1px 3px #000, 0 0 7px rgba(0, 0, 0, .8); pointer-events: none; }
 .article-content.markdown-body pre { margin: 26px 0; padding: 17px 20px; overflow-x: auto; border: 1px solid var(--border); border-radius: 9px; background: #f6f8fa; font-size: 13px; line-height: 1.65; tab-size: 4; box-shadow: 0 5px 18px rgba(38, 51, 67, .04); }
 .article-content.markdown-body pre code, .article-content.markdown-body pre code.hljs { display: block; padding: 0; background: transparent; color: inherit; font-size: inherit; line-height: inherit; overflow: visible; }
 .article-content.markdown-body :not(pre) > code { padding: .16em .38em; border-radius: 4px; background: #f0f4f8; color: #476794; font-size: .88em; }
@@ -63,6 +66,14 @@
 .directory-page .article-content.markdown-body table tbody td:first-child { color: var(--text); font-size: 15px; }
 .directory-page .article-content.markdown-body table tbody td:last-child { color: var(--accent); font-size: 17px; text-align: right; }
 .directory-page .article-content.markdown-body table tbody tr:last-child td { border-bottom: 0; }
+.feeling-page .article-layout { display: block; width: min(760px, calc(100% - 48px)); }
+.feeling-page .toc-panel { display: none; }
+.feeling-page .article-content.markdown-body { min-height: 340px; padding-top: 82px; }
+.feeling-page .feeling { color: #2c3e50; font-family: "STKaiti", "KaiTi", cursive; font-size: clamp(20px, 3vw, 25px); letter-spacing: .04em; line-height: 2; text-align: center; }
+.feeling-page .feeling-line { min-height: 2em; white-space: pre-wrap; }
+.feeling-page .feeling-cursor { display: inline-block; margin-left: .08em; animation: feeling-cursor-blink .9s steps(1, end) infinite; }
+.feeling-readable { position: absolute; width: 1px; height: 1px; padding: 0; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0; }
+@keyframes feeling-cursor-blink { 50% { opacity: 0; } }
 .article-end { display: flex; align-items: center; justify-content: space-between; gap: 16px; margin-top: 55px; padding-top: 20px; border-top: 1px solid var(--border); color: #8b98a6; font-size: 12px; }
 .article-end a { color: var(--accent); }
 .article-end a:hover { text-decoration: underline; }
@@ -92,7 +103,7 @@
 }
 
 @media (max-width: 580px) {
-    .article-layout { width: min(100% - 36px, 720px); padding: 33px 0 75px; }
+    .article-layout { width: min(100% - 36px, 720px); padding: 64px 0 75px; }
     .back-link { margin-bottom: 30px; }
     .article-heading h1 { font-size: 30px; }
     .article-meta { gap: 6px 10px; }
@@ -111,4 +122,9 @@
     .directory-page .article-content.markdown-body table tbody td:nth-child(2) { margin-top: 4px; }
     .directory-page .article-content.markdown-body table tbody td:last-child { position: absolute; top: 50%; right: 16px; width: auto; transform: translateY(-50%); }
     .back-to-top { right: 16px; bottom: 16px; }
+}
+
+@media (max-width: 580px) {
+    .feeling-page .article-layout { width: min(100% - 36px, 760px); }
+    .feeling-page .article-content.markdown-body { min-height: 300px; padding-top: 60px; }
 }
