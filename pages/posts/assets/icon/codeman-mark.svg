@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <!-- Based on Lucide's zap icon (ISC License). See LICENSE-lucide.txt. -->
+  <title>codeman 闪电标记</title>
+  <rect width="64" height="64" rx="14" fill="#17283e"/>
+  <g transform="translate(7 7) scale(2.08)">
+    <path d="M15.914 4a1.5 1.5 0 0 0-2.474-1.561l-9 9A1.5 1.5 0 0 0 5.5 14h4.002a.5.5 0 0 1 .471.666L8.086 20a1.5 1.5 0 0 0 2.475 1.56l9-9A1.5 1.5 0 0 0 18.5 10h-3.997a.5.5 0 0 1-.472-.667z" fill="#8fc4f5"/>
+  </g>
+</svg>
