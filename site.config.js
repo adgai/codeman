@@ -1,6 +1,7 @@
 module.exports = {
     brandName: 'codeman',
     brandSuffix: '.im',
+    homeOrder: [], // 例如 ['aboutme.md', 'posts', 'tools']；未列出的条目保持默认顺序
     defaultLayout: 'article',
     layouts: {
         article: { renderer: 'markdown' },

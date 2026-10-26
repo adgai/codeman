@@ -24,6 +24,7 @@ body { display: flex; min-height: 100vh; min-height: 100svh; flex-direction: col
 .home-content > .folder-list .folder-row a { padding: 13px 15px; border-radius: 10px; }
 .home-content > .folder-list .folder-row a:hover { background: #eaf2fc; }
 .folder-list .folder-row + .file-row { margin-top: 22px; }
+.folder-list .file-row + .folder-row { margin-top: 9px; }
 .entry-icon { display: grid; place-items: center; width: 34px; height: 34px; border-radius: 9px; background: #f0f4fa; color: #5d7caa; transition: background .2s ease, color .2s ease; }
 .entry-icon svg { display: block; width: 21px; height: 21px; }
 .folder-row .entry-icon { background: #e1edfb; color: #3f74b5; }

@@ -15,6 +15,7 @@ npm run build
 - 直接放在 `pages/` 下的 Markdown 文件会作为文件链接出现在首页，点击后打开正文；`home.md` 只用于生成首页，不会出现在列表中。
 - 文件夹里直接放 Markdown 文件，不需要 `_index.md`。点开文件夹会列出其中的文件，再点文件查看正文；草稿文件（`draft: true`）不会显示。
 - 例如文章放在 `pages/posts/`，项目内容放在 `pages/projects/`。有 Markdown 文件的新增文件夹会自动出现在首页，目录地址是 `文件夹名/`。已知文件夹的中文名称和顺序在 `site.config.js` 中设置。
+- 可以在 `site.config.js` 的 `homeOrder` 中指定首页条目顺序，例如 `['aboutme.md', 'posts', 'tools']`。文件夹写目录名，单独文件写完整 `.md` 文件名；两者可以交错排列。未列出的条目仍按默认顺序排在后面，留空则完全使用默认顺序（先按配置排列文件夹，再按文件名排列单独文件）。
 - 单篇 Markdown 仍生成根目录下的同名 HTML，保留现有文章链接。例如 `pages/myproject.md` 仍生成 `myproject.html`。
 - 页面共用 `pages/posts/static/article.html`；首页和文件夹页使用根目录的 `index.html`。`site.config.js` 保留站点品牌配置。
 

@@ -266,6 +266,7 @@ function generateNewIndexHtml(indexTemplate, homeHtml, outputIndexFilePath, fold
 
     const ul = document.createElement('ul');
     ul.className = 'folder-list';
+    const homeRows = new Map();
     folders.forEach(folder => {
         const li = document.createElement('li');
         li.className = 'folder-row';
@@ -285,6 +286,7 @@ function generateNewIndexHtml(indexTemplate, homeHtml, outputIndexFilePath, fold
         link.append(icon, label, count, arrow);
         li.appendChild(link);
         ul.appendChild(li);
+        homeRows.set(folder.name, li);
     });
     standalonePages.forEach(page => {
         const li = document.createElement('li');
@@ -310,7 +312,24 @@ function generateNewIndexHtml(indexTemplate, homeHtml, outputIndexFilePath, fold
         link.append(icon, label, date, arrow);
         li.appendChild(link);
         ul.appendChild(li);
+        homeRows.set(page.file, li);
     });
+    const homeOrder = siteConfig.homeOrder ?? [];
+    if (!Array.isArray(homeOrder)) throw new Error('site.config.js homeOrder must be an array');
+    const orderedRows = [];
+    const seen = new Set();
+    homeOrder.forEach(key => {
+        if (typeof key !== 'string') throw new Error('site.config.js homeOrder entries must be strings');
+        if (seen.has(key)) throw new Error(`Duplicate homeOrder entry: ${key}`);
+        seen.add(key);
+        const row = homeRows.get(key);
+        if (!row) {
+            console.warn(`Home order entry not found: ${key}`);
+            return;
+        }
+        orderedRows.push(row);
+    });
+    ul.prepend(...orderedRows);
     directoryHeading.after(ul);
     fs.writeFileSync(outputIndexFilePath, dom.serialize(), 'utf-8');
 }
